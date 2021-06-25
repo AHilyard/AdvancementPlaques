@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="MIT"
+
+[[mods]]
+modId="advancementplaques"
+version="0.1"
+displayName="Advancement Plaques"
+displayURL="https://anthonyhilyard.com/"
+logoFile="icon.png"
+authors="Grend"
+description='''Replaces standard advancement toasts with fancy plaques.'''
+
+[[dependencies.advancementplaques]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.advancementplaques]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5]"
+    ordering="NONE"
+    side="BOTH"
