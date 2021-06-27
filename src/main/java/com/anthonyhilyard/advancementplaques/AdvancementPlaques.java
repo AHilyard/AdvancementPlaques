@@ -19,6 +19,13 @@ public class AdvancementPlaques
 
 	public void onClientSetup(FMLClientSetupEvent event)
 	{
-		Minecraft.getInstance().toastGui = new AdvancementPlaquesToastGui(Minecraft.getInstance());
+		event.enqueueWork(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Minecraft.getInstance().toastGui = new AdvancementPlaquesToastGui(Minecraft.getInstance());
+			}
+		});
 	}
 }

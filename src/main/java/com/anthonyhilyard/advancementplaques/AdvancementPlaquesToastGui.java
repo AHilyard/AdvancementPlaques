@@ -37,7 +37,7 @@ public class AdvancementPlaquesToastGui extends ToastGui
 	{
 		super(mcIn);
 		mc = mcIn;
-		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors());
+		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors(), mc);
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class AdvancementPlaquesToastGui extends ToastGui
 					RenderSystem.pushMatrix();
 					RenderSystem.translatef(1.0f, 1.0f, 0.0f);
 					RenderSystem.scalef(1.5f, 1.5f, 1.0f);
-					itemRenderer.renderItemModelIntoGUIWithAlpha(displayInfo.getIcon(), 1, 1, alpha, mc);
+					itemRenderer.renderItemModelIntoGUIWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
 					RenderSystem.popMatrix();
 
 					if (!hasPlayedSound)
@@ -222,7 +222,6 @@ public class AdvancementPlaquesToastGui extends ToastGui
 					AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
 					matrixStack.pop();
 				}
-				
 
 				return displayTime >= 8000 ? Visibility.HIDE : Visibility.SHOW;
 			}
