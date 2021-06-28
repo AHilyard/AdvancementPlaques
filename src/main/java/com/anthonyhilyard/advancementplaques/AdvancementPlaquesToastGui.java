@@ -131,7 +131,13 @@ public class AdvancementPlaquesToastGui extends ToastGui
 
 			if (displayInfo != null)
 			{
-				if (displayTime >= 500)
+				float fadeInTime = 500f, fadeOutTime = 1500f;
+				if (displayInfo.getFrame() == FrameType.CHALLENGE)
+				{
+					fadeInTime = 1250f;
+				}
+
+				if (displayTime >= fadeInTime)
 				{
 					float alpha = 1.0f;
 					if (displayTime > 7000)
@@ -196,34 +202,48 @@ public class AdvancementPlaquesToastGui extends ToastGui
 					}
 				}
 
-				if (displayTime < 500)
+				if (displayTime < fadeInTime)
 				{
 					RenderSystem.enableAlphaTest();
 					RenderSystem.enableBlend();
 					RenderSystem.defaultBlendFunc();
 					RenderSystem.defaultAlphaFunc();
-					RenderSystem.color4f(1.0f, 1.0f, 1.0f, (float)displayTime / 500.0f);
+					RenderSystem.color4f(1.0f, 1.0f, 1.0f, (float)displayTime / fadeInTime);
 					matrixStack.push();
 					matrixStack.translate(0.0f, 0.0f, 195.0f);
 					mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
-					AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
+					if (displayInfo.getFrame() == FrameType.CHALLENGE)
+					{
+						AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, height() + 32, width() + 32, height() + 32, 512, 512);
+					}
+					else
+					{
+						AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
+					}
 					matrixStack.pop();
 				}
-				else if (displayTime < 2000)
+				else if (displayTime < fadeInTime + fadeOutTime)
 				{
 					RenderSystem.enableAlphaTest();
 					RenderSystem.enableBlend();
 					RenderSystem.defaultBlendFunc();
 					RenderSystem.defaultAlphaFunc();
-					RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f - ((float)(displayTime - 500) / 1500.0f));
+					RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f - ((float)(displayTime - fadeInTime) / fadeOutTime));
 					matrixStack.push();
 					matrixStack.translate(0.0f, 0.0f, 195.0f);
 					mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
-					AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
+					if (displayInfo.getFrame() == FrameType.CHALLENGE)
+					{
+						AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, height() + 32, width() + 32, height() + 32, 512, 512);
+					}
+					else
+					{
+						AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
+					}
 					matrixStack.pop();
 				}
 
-				return displayTime >= 8000 ? Visibility.HIDE : Visibility.SHOW;
+				return displayTime >= fadeInTime + fadeOutTime + 6000 ? Visibility.HIDE : Visibility.SHOW;
 			}
 			else
 			{
@@ -247,9 +267,18 @@ public class AdvancementPlaquesToastGui extends ToastGui
 			}
 			
 			RenderSystem.pushMatrix();
-			RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
-									(float)(mc.getMainWindow().getScaledHeight() - (height() + 42)),
-									800.0f + index);
+			if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
+			{
+				RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
+										16f,
+										800.0f + index);
+			}
+			else
+			{
+				RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
+										(float)(mc.getMainWindow().getScaledHeight() - (height() + 42)),
+										800.0f + index);
+			}
 			Visibility newVisibility = drawPlaque(matrixStack, currentTime - visibleTime);
 			RenderSystem.popMatrix();
 
