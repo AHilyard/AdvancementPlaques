@@ -19,12 +19,21 @@ public class AdvancementPlaquesConfig
 	}
 
 	public final BooleanValue onTop;
+	public final BooleanValue tasks;
+	public final BooleanValue goals;
+	public final BooleanValue challenges;
 
 	public AdvancementPlaquesConfig(ForgeConfigSpec.Builder build)
 	{
 		build.comment("Client Configuration").push("client").push("visual_options");
 
-		onTop = build.comment("If plaques should show on the top of the screen (default bottom).").define("on_top", false);
+		// Display options for plaque placement.
+		onTop = build.comment("If plaques should show on the top of the screen.").define("on_top", true);
+
+		// Display options for advancement types.
+		tasks = build.comment("If plaques should show for task advancements (normal advancements).").define("tasks", true);
+		goals = build.comment("If plaques should show for goal advancements (medium-difficulty advancements).").define("goals", true);
+		challenges = build.comment("If plaques should show for challenge advancements (high-difficulty advancements).").define("challenges", true);
 
 		build.pop().pop();
 	}
