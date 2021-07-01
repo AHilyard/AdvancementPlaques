@@ -14,9 +14,8 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.AdvancementToast;
 import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.gui.toasts.ToastGui;
 
-public class AdvancementPlaquesToastGui extends ToastGui
+public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.BetterGuiToast
 {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -26,9 +25,9 @@ public class AdvancementPlaquesToastGui extends ToastGui
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 
-	public AdvancementPlaquesToastGui(Minecraft mcIn)
+	public AdvancementPlaquesToastGuiWithToastControl(Minecraft mcIn)
 	{
-		super(mcIn);
+		super();
 		mc = mcIn;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors(), mc);
 	}

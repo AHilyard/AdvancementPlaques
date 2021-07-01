@@ -35,13 +35,8 @@ minecraft {
 
 repositories {
 	maven {
-		url "https://dvs1.progwml6.com/files/maven"
-	}
-	maven { 
-		url 'https://www.dogforce-games.com/maven/'
-	}
-	maven {
-		url 'https://maven.tehnut.info'
+		name = "CurseMaven"
+		url "https://www.cursemaven.com"
 	}
 }
 
@@ -64,20 +59,29 @@ processResources {
 	}
 }
 
-sourceSets.main.resources {
-	srcDir 'src/generated/resources'
+configurations {
+	provided
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDir 'src/generated/resources'
+		}
+		compileClasspath += configurations.provided
+	}
 }
 
 dependencies {
 	minecraft 'net.minecraftforge:forge:' + project.properties.mcVersion + '-' + forgeVersion
-	compile fileTree(dir: 'libs', include: '*.jar')
+	provided fg.deobf('curse.maven:toastcontrol-271740:3172881')
 }
 
 jar {
 	manifest {
 		attributes(["Specification-Title": project.name,
 					"Specification-Vendor": project.author,
-					"Specification-Version": "24.0", // We are version 1 of the modlauncher specification
+					"Specification-Version": "24.0",
 					"Implementation-Title": project.name,
 					"Implementation-Version": project.version,
 					"Implementation-Vendor" : project.author,
