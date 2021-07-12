@@ -199,13 +199,13 @@ public class AdvancementPlaque
 		if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
 		{
 			RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
-									16f,
+									AdvancementPlaquesConfig.INSTANCE.distance.get(),
 									800.0f + index);
 		}
 		else
 		{
 			RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
-									(float)(mc.getMainWindow().getScaledHeight() - (height() + 42)),
+									(float)(mc.getMainWindow().getScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
 									800.0f + index);
 		}
 		Visibility newVisibility = drawPlaque(matrixStack, currentTime - visibleTime);

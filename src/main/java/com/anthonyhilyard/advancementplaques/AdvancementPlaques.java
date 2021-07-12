@@ -40,7 +40,6 @@ public class AdvancementPlaques
 
 					if (newToastGui != null)
 					{
-						LOGGER.debug("replacing toast gui with {}", newToastGui.getClass());
 						Minecraft.getInstance().toastGui = newToastGui;
 					}
 					else

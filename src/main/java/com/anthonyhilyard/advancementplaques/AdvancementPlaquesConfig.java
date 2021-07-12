@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -22,6 +23,7 @@ public class AdvancementPlaquesConfig
 	public final BooleanValue tasks;
 	public final BooleanValue goals;
 	public final BooleanValue challenges;
+	public final IntValue distance;
 
 	public AdvancementPlaquesConfig(ForgeConfigSpec.Builder build)
 	{
@@ -29,6 +31,7 @@ public class AdvancementPlaquesConfig
 
 		// Display options for plaque placement.
 		onTop = build.comment("If plaques should show on the top of the screen.").define("on_top", true);
+		distance = build.comment("The distance from the top or bottom of the screen, in pixels.").defineInRange("distance", 42, 8, 256);
 
 		// Display options for advancement types.
 		tasks = build.comment("If plaques should show for task advancements (normal advancements).").define("tasks", true);
