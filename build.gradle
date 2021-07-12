@@ -69,6 +69,7 @@ sourceSets {
 dependencies {
 	minecraft 'net.minecraftforge:forge:' + project.properties.mcVersion + '-' + forgeVersion
 	provided fg.deobf('curse.maven:toastcontrol-271740:3172881')
+	provided fg.deobf('curse.maven:jade-324717:3302544')
 }
 
 jar {

@@ -139,7 +139,7 @@ public class AdvancementPlaque
 				RenderSystem.defaultAlphaFunc();
 				RenderSystem.color4f(1.0f, 1.0f, 1.0f, (float)displayTime / fadeInTime);
 				matrixStack.push();
-				matrixStack.translate(0.0f, 0.0f, 195.0f);
+				matrixStack.translate(0.0f, 0.0f, 95.0f);
 				mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
 				if (displayInfo.getFrame() == FrameType.CHALLENGE)
 				{
@@ -159,7 +159,7 @@ public class AdvancementPlaque
 				RenderSystem.defaultAlphaFunc();
 				RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f - ((float)(displayTime - fadeInTime) / fadeOutTime));
 				matrixStack.push();
-				matrixStack.translate(0.0f, 0.0f, 195.0f);
+				matrixStack.translate(0.0f, 0.0f, 95.0f);
 				mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
 				if (displayInfo.getFrame() == FrameType.CHALLENGE)
 				{
@@ -196,19 +196,21 @@ public class AdvancementPlaque
 		}
 		
 		RenderSystem.pushMatrix();
+		RenderSystem.disableDepthTest();
 		if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
 		{
 			RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
 									AdvancementPlaquesConfig.INSTANCE.distance.get(),
-									800.0f + index);
+									900.0f + index);
 		}
 		else
 		{
 			RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
 									(float)(mc.getMainWindow().getScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
-									800.0f + index);
+									900.0f + index);
 		}
 		Visibility newVisibility = drawPlaque(matrixStack, currentTime - visibleTime);
+		RenderSystem.enableDepthTest();
 		RenderSystem.popMatrix();
 
 		if (newVisibility != visibility)

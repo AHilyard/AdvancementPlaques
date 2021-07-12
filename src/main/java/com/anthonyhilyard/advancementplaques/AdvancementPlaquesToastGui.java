@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.AdvancementToast;
 import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.gui.toasts.ToastGui;
+import net.minecraftforge.fml.ModList;
 
 public class AdvancementPlaquesToastGui extends ToastGui
 {
@@ -61,6 +62,37 @@ public class AdvancementPlaquesToastGui extends ToastGui
 		{
 			// Do toasts.
 			super.func_238541_a_(stack);
+
+			try
+			{
+				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
+				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && ModList.get().isLoaded("waila"))
+				{
+					boolean anyPlaques = false;
+					for (int i = 0; i < plaques.length; i++)
+					{
+						if (plaques[i] != null)
+						{
+							anyPlaques = true;
+							break;
+						}
+					}
+
+
+					if (anyPlaques)
+					{
+						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("disableWaila").invoke(null);
+					}
+					else
+					{
+						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("enableWaila").invoke(null);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				LOGGER.error(e);
+			}
 
 			// Do plaques.
 			for (int i = 0; i < plaques.length; ++i)
