@@ -7,20 +7,35 @@ modId="advancementplaques"
 version="${version}"
 displayName="Advancement Plaques"
 displayURL="https://anthonyhilyard.com/"
+updateJSONURL="https://mc-curse-update-checker.herokuapp.com/499826"
 logoFile="icon.png"
 authors="Grend"
-description='''Replaces standard advancement toasts with fancy plaques.'''
+description="Replaces standard advancement toasts with fancy plaques."
 
 [[dependencies.advancementplaques]]
-    modId="forge"
-    mandatory=true
-    versionRange="[36,)"
-    ordering="NONE"
-    side="BOTH"
+	modId="forge"
+	mandatory=true
+	versionRange="[36,)"
+	ordering="NONE"
+	side="BOTH"
 
 [[dependencies.advancementplaques]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.16.5]"
-    ordering="NONE"
-    side="BOTH"
+	modId="minecraft"
+	mandatory=true
+	versionRange="[1.16.5]"
+	ordering="NONE"
+	side="BOTH"
+
+[[dependencies.advancementplaques]]
+	modId="toastcontrol"
+	mandatory=false
+	versionRange="[4.3,)"
+	ordering="NONE"
+	side="BOTH"
+
+[[dependencies.advancementplaques]]
+	modId="waila"
+	mandatory=false
+	versionRange="[2.7.1,)"
+	ordering="NONE"
+	side="BOTH"
