@@ -45,9 +45,13 @@ public class AdvancementPlaquesToastGui extends ToastGui
 				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
 				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()))
 			{
-				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
-				advancementToastsQueue.add((AdvancementToast)toastIn);
-				return;
+				if (AdvancementPlaquesConfig.INSTANCE.whitelist.get().isEmpty() ||
+					AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
+				{
+					// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
+					advancementToastsQueue.add((AdvancementToast)toastIn);
+					return;
+				}
 			}
 		}
 
