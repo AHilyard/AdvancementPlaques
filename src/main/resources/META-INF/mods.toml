@@ -32,10 +32,3 @@ description="Replaces standard advancement toasts with fancy plaques."
 	versionRange="[4.3,)"
 	ordering="NONE"
 	side="BOTH"
-
-[[dependencies.advancementplaques]]
-	modId="waila"
-	mandatory=false
-	versionRange="[2.7.1,)"
-	ordering="NONE"
-	side="BOTH"
