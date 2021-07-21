@@ -60,18 +60,34 @@ public class AdvancementPlaque
 
 		if (displayInfo != null)
 		{
-			float fadeInTime = 500f, fadeOutTime = 1500f;
-			if (displayInfo.getFrame() == FrameType.CHALLENGE)
+			float fadeInTime, fadeOutTime, duration;
+			
+			switch (displayInfo.getFrame())
 			{
-				fadeInTime = 1250f;
+				default:
+				case TASK:
+					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.taskEffectFadeInTime.get() * 1000.0);
+					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.taskEffectFadeOutTime.get() * 1000.0);
+					duration = (float)(AdvancementPlaquesConfig.INSTANCE.taskDuration.get() * 1000.0);
+					break;
+				case GOAL:
+					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.goalEffectFadeInTime.get() * 1000.0);
+					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.goalEffectFadeOutTime.get() * 1000.0);
+					duration = (float)(AdvancementPlaquesConfig.INSTANCE.goalDuration.get() * 1000.0);
+					break;
+				case CHALLENGE:
+					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.challengeEffectFadeInTime.get() * 1000.0);
+					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.challengeEffectFadeOutTime.get() * 1000.0);
+					duration = (float)(AdvancementPlaquesConfig.INSTANCE.challengeDuration.get() * 1000.0);
+					break;
 			}
 
 			if (displayTime >= fadeInTime)
 			{
 				float alpha = 1.0f;
-				if (displayTime > 7000)
+				if (displayTime > duration)
 				{
-					alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - 7000) / 1000.0f));
+					alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - duration) / 1000.0f));
 				}
 				int alphaMask = (int)(alpha * 255.0f);
 
@@ -131,33 +147,19 @@ public class AdvancementPlaque
 				}
 			}
 
-			if (displayTime < fadeInTime)
+			if (displayTime < fadeInTime + fadeOutTime)
 			{
+				float alpha = 1.0f - ((float)(displayTime - fadeInTime) / fadeOutTime);
+				if (displayTime < fadeInTime)
+				{
+					alpha = (float)displayTime / fadeInTime;
+				}
+
 				RenderSystem.enableAlphaTest();
 				RenderSystem.enableBlend();
 				RenderSystem.defaultBlendFunc();
 				RenderSystem.defaultAlphaFunc();
-				RenderSystem.color4f(1.0f, 1.0f, 1.0f, (float)displayTime / fadeInTime);
-				matrixStack.push();
-				matrixStack.translate(0.0f, 0.0f, 95.0f);
-				mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
-				if (displayInfo.getFrame() == FrameType.CHALLENGE)
-				{
-					AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, height() + 32, width() + 32, height() + 32, 512, 512);
-				}
-				else
-				{
-					AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
-				}
-				matrixStack.pop();
-			}
-			else if (displayTime < fadeInTime + fadeOutTime)
-			{
-				RenderSystem.enableAlphaTest();
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
-				RenderSystem.defaultAlphaFunc();
-				RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f - ((float)(displayTime - fadeInTime) / fadeOutTime));
+				RenderSystem.color4f(1.0f, 1.0f, 1.0f, alpha);
 				matrixStack.push();
 				matrixStack.translate(0.0f, 0.0f, 95.0f);
 				mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
@@ -172,7 +174,7 @@ public class AdvancementPlaque
 				matrixStack.pop();
 			}
 
-			return displayTime >= fadeInTime + fadeOutTime + 6000 ? Visibility.HIDE : Visibility.SHOW;
+			return displayTime >= fadeInTime + fadeOutTime + duration ? Visibility.HIDE : Visibility.SHOW;
 		}
 		else
 		{
