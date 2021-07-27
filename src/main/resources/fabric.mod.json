@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "advancementplaques",
+	"version": "${version}",
+
+	"name": "Advancement Plaques",
+	"description": "Replaces standard advancement toasts with fancy plaques.",
+	"authors": [ "Grend" ],
+	"contact": {
+		"homepage": "https://anthonyhilyard.com/",
+		"sources": "https://github.com/AHilyard/AdvancementPlaques"
+	},
+
+	"license": "MIT",
+	"icon": "icon.png",
+
+	"environment": "client",
+
+	"entrypoints": {
+		"client": [
+			"com.anthonyhilyard.advancementplaques.Loader"
+		]
+	},
+
+	"depends": {
+		"fabricloader": ">=0.11.3",
+		"fabric": "*",
+		"minecraft": "1.17.x",
+		"java": ">=16"
+	},
+	"suggests": {
+		"waila": "*"
+	}
+}
