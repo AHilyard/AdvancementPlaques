@@ -1,21 +1,22 @@
 buildscript {
 	repositories {
-		maven { url = 'https://files.minecraftforge.net/maven' }
+		maven { url = 'https://maven.minecraftforge.net' }
 		jcenter()
 		mavenCentral()
 	}
 	dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 	}
 }
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
 
-archivesBaseName = name + '-' + mcVersion
+archivesBaseName = name + '-' + project.mcVersion
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
-	mappings 'snapshot', project.properties.mappingsVersion
+	mappings channel: 'official', version: project.mcVersion
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	runs {
 		client = {
@@ -34,42 +35,18 @@ repositories {
 	}
 }
 
-// Process resources on build
-processResources {
-	// This will ensure that this task is redone when the versions change.
-	inputs.property 'version', project.version
-
-	// Replace stuff in mods.toml, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include 'META-INF/mods.toml'
-
-		// Replace version
-		expand 'version':project.version
-	}
-
-	// Copy everything else except the mods.toml
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'META-INF/mods.toml'
-	}
-}
-
-configurations {
-	provided
-}
 
 sourceSets {
 	main {
 		resources {
 			srcDir 'src/generated/resources'
 		}
-		compileClasspath += configurations.provided
 	}
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:' + project.properties.mcVersion + '-' + forgeVersion
-	provided fg.deobf('curse.maven:toastcontrol-271740:3172881')
-	provided fg.deobf('curse.maven:jade-324717:3302544')
+	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
+	implementation fg.deobf('curse.maven:jade-324717:3400050')
 }
 
 jar {

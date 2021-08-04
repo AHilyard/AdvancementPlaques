@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Deque;
 
 import com.google.common.collect.Queues;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,12 +12,12 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.toasts.AdvancementToast;
-import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.gui.toasts.ToastGui;
+import net.minecraft.client.gui.components.toasts.AdvancementToast;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraftforge.fml.ModList;
 
-public class AdvancementPlaquesToastGui extends ToastGui
+public class AdvancementPlaquesToastGui extends ToastComponent
 {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -31,11 +31,11 @@ public class AdvancementPlaquesToastGui extends ToastGui
 	{
 		super(mcIn);
 		mc = mcIn;
-		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors(), mc);
+		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors(), mc.getItemRenderer().getBlockEntityRenderer(), mc);
 	}
 
 	@Override
-	public void add(IToast toastIn)
+	public void addToast(Toast toastIn)
 	{
 		if (toastIn instanceof AdvancementToast)
 		{
@@ -43,29 +43,25 @@ public class AdvancementPlaquesToastGui extends ToastGui
 			DisplayInfo displayInfo = advancementToast.advancement.getDisplay();
 			if ((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
 				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
-				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()))
+				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
+				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
 			{
-				if (AdvancementPlaquesConfig.INSTANCE.whitelist.get().isEmpty() ||
-					AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
-				{
-					// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
-					advancementToastsQueue.add((AdvancementToast)toastIn);
-					return;
-				}
+				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
+				advancementToastsQueue.add((AdvancementToast)toastIn);
+				return;
 			}
 		}
 
-		super.add(toastIn);
+		super.addToast(toastIn);
 	}
 
 	@Override
-	// Render
-	public void func_238541_a_(MatrixStack stack)
+	public void render(PoseStack stack)
 	{
-		if (!mc.gameSettings.hideGUI)
+		if (!mc.options.hideGui)
 		{
 			// Do toasts.
-			super.func_238541_a_(stack);
+			super.render(stack);
 
 			try
 			{
@@ -103,7 +99,7 @@ public class AdvancementPlaquesToastGui extends ToastGui
 			{
 				AdvancementPlaque toastinstance = plaques[i];
 
-				if (toastinstance != null && toastinstance.render(mc.getMainWindow().getScaledWidth(), i, stack))
+				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
 				{
 					plaques[i] = null;
 				}

@@ -6,14 +6,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.config.IConfigEvent;
 
 public class AdvancementPlaquesConfig
 {
@@ -76,13 +76,13 @@ public class AdvancementPlaquesConfig
 
 		build.pop().push("functionality_options");
 
-		whitelist = build.comment("Whitelist of advancements to show plaques for.  Leave empty to display for all.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> ResourceLocation.isResouceNameValid((String)e) );
+		whitelist = build.comment("Whitelist of advancements to show plaques for.  Leave empty to display for all.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> ResourceLocation.isValidResourceLocation((String)e) );
 
 		build.pop().pop();
 	}
 
 	@SubscribeEvent
-	public static void onLoad(ModConfig.Loading e)
+	public static void onLoad(IConfigEvent e)
 	{
 		if (e.getConfig().getModId().equals(Loader.MODID))
 		{

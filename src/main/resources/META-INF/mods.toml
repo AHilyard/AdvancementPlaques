@@ -1,10 +1,10 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[37,)"
 license="MIT"
 
 [[mods]]
 modId="advancementplaques"
-version="${version}"
+version="${file.jarVersion}"
 displayName="Advancement Plaques"
 displayURL="https://anthonyhilyard.com/"
 updateJSONURL="https://mc-curse-update-checker.herokuapp.com/499826"
@@ -15,20 +15,13 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="forge"
 	mandatory=true
-	versionRange="[36,)"
+	versionRange="[37,)"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="minecraft"
 	mandatory=true
-	versionRange="[1.16.5]"
-	ordering="NONE"
-	side="BOTH"
-
-[[dependencies.advancementplaques]]
-	modId="toastcontrol"
-	mandatory=false
-	versionRange="[4.3,)"
+	versionRange="[1.17.1,1.18)"
 	ordering="NONE"
 	side="BOTH"

@@ -1,8 +1,8 @@
 package com.anthonyhilyard.advancementplaques;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.toasts.ToastGui;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -28,19 +28,19 @@ public class AdvancementPlaques
 			{
 				try
 				{
-					final ToastGui newToastGui;
+					final ToastComponent newToastComponent;
 					if (ModList.get().isLoaded("toastcontrol"))
 					{
-						newToastGui = (ToastGui) Class.forName("com.anthonyhilyard.advancementplaques.AdvancementPlaquesToastGuiWithToastControl").getConstructor(Minecraft.class).newInstance(Minecraft.getInstance());
+						newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.AdvancementPlaquesToastGuiWithToastControl").getConstructor(Minecraft.class).newInstance(Minecraft.getInstance());
 					}
 					else
 					{
-						newToastGui = new AdvancementPlaquesToastGui(Minecraft.getInstance());
+						newToastComponent = new AdvancementPlaquesToastGui(Minecraft.getInstance());
 					}
 
-					if (newToastGui != null)
+					if (newToastComponent != null)
 					{
-						Minecraft.getInstance().toastGui = newToastGui;
+						Minecraft.getInstance().toast = newToastComponent;
 					}
 					else
 					{
