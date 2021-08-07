@@ -43,15 +43,12 @@ public class AdvancementPlaquesToastGui extends ToastGui
 			DisplayInfo displayInfo = advancementToast.advancement.getDisplay();
 			if ((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
 				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
-				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()))
+				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
+				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
 			{
-				if (AdvancementPlaquesConfig.INSTANCE.whitelist.get().isEmpty() ||
-					AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
-				{
-					// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
-					advancementToastsQueue.add((AdvancementToast)toastIn);
-					return;
-				}
+				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
+				advancementToastsQueue.add((AdvancementToast)toastIn);
+				return;
 			}
 		}
 
