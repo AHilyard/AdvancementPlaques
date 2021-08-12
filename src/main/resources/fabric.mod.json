@@ -21,6 +21,7 @@
 			"com.anthonyhilyard.advancementplaques.Loader"
 		]
 	},
+	"accessWidener": "advancementplaques.accessWidener",
 
 	"depends": {
 		"fabricloader": ">=0.11.3",

@@ -1,1 +1,6 @@
 accessWidener	v1 named
+accessible    field    net/minecraft/client/gui/components/toasts/AdvancementToast    advancement    Lnet/minecraft/advancements/Advancement;
+accessible    field    net/minecraft/client/Minecraft    toast    Lnet/minecraft/client/gui/components/toasts/ToastComponent;
+mutable    field    net/minecraft/client/Minecraft    toast    Lnet/minecraft/client/gui/components/toasts/ToastComponent;
+accessible    field    net/minecraft/client/Minecraft    itemColors    Lnet/minecraft/client/color/item/ItemColors;
+accessible    field    net/minecraft/client/renderer/entity/ItemRenderer    blockEntityRenderer    Lnet/minecraft/client/renderer/BlockEntityWithoutLevelRenderer;
