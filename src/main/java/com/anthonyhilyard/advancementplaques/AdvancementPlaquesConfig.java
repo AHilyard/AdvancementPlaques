@@ -60,6 +60,12 @@ public class AdvancementPlaquesConfig implements ConfigData
 
 	@Comment("Whitelist of advancements to show plaques for.  Leave empty to display for all.")
 	public List<String> whitelist = new ArrayList<String>();
+	@Comment("If task sounds should be muted.")
+	public boolean muteTasks = false;
+	@Comment("If goal sounds should be muted.")
+	public boolean muteGoals = false;
+	@Comment("If challenge sounds should be muted.")
+	public boolean muteChallenges = false;
 
 	@Override
 	public void validatePostLoad()

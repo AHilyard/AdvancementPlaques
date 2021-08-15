@@ -8,7 +8,8 @@
 	"authors": [ "Grend" ],
 	"contact": {
 		"homepage": "https://anthonyhilyard.com/",
-		"sources": "https://github.com/AHilyard/AdvancementPlaques"
+		"sources": "https://github.com/AHilyard/AdvancementPlaques",
+		"discord": "https://discord.gg/S5NQjbXPnb"
 	},
 
 	"license": "MIT",
@@ -21,15 +22,28 @@
 			"com.anthonyhilyard.advancementplaques.Loader"
 		]
 	},
-	"accessWidener": "advancementplaques.accessWidener",
+	"accessWidener": "advancementplaques.accesswidener",
 
 	"depends": {
 		"fabricloader": ">=0.11.3",
 		"fabric": "*",
 		"minecraft": "1.17.x",
-		"java": ">=16"
+		"java": ">=16",
+		"cloth-config2": ">=5.0"
 	},
 	"suggests": {
 		"waila": "*"
-	}
+	},
+	"custom": {
+		"modupdater": {
+		  "strategy": "curseforge",
+		  "projectID": 514882,
+		  "strict": false
+		},
+		"modmenu": {
+		  "links": {
+			"modmenu.discord": "https://discord.gg/S5NQjbXPnb"
+		  }
+		}
+	  }
 }

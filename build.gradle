@@ -43,12 +43,11 @@ dependencies {
 
 	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") { exclude(group: "net.fabricmc.fabric-api") }
 
-	//provided fg.deobf('curse.maven:toastcontrol-271740:3172881')
-	//provided fg.deobf('curse.maven:jade-324717:3302544')
+	modCompileOnly 'curse.maven:wthit-440979:3401714'
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/${project.name.toLowerCase()}.accessWidener")
+	accessWidenerPath = file("src/main/resources/${project.name.toLowerCase()}.accesswidener")
 }
 
 // Process resources on build
