@@ -142,16 +142,35 @@ public class AdvancementPlaque
 				RenderSystem.applyModelViewMatrix();
 				itemRenderer.renderGuiItemWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
 				
-				
 				modelViewStack.popPose();
 				RenderSystem.applyModelViewMatrix();
 
 				if (!hasPlayedSound)
 				{
 					hasPlayedSound = true;
-					if (displayInfo.getFrame() == FrameType.CHALLENGE)
+
+					// Play sound based on frame type.
+					switch (displayInfo.getFrame())
 					{
-						mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
+						case TASK:
+							if (!AdvancementPlaquesConfig.INSTANCE.muteTasks.get())
+							{
+								mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.TASK_COMPLETE.get(), 1.0f, 1.0f));
+							}
+							break;
+						case GOAL:
+							if (!AdvancementPlaquesConfig.INSTANCE.muteGoals.get())
+							{
+								mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.GOAL_COMPLETE.get(), 1.0f, 1.0f));
+							}
+							break;
+						default:
+						case CHALLENGE:
+							if (!AdvancementPlaquesConfig.INSTANCE.muteChallenges.get())
+							{
+								mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
+							}
+							break;
 					}
 				}
 			}
@@ -231,7 +250,6 @@ public class AdvancementPlaque
 		{
 			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 600.0f));
 			visibility = newVisibility;
-			visibility.playSound(mc.getSoundManager());
 		}
 
 		return visibility == Visibility.HIDE && currentTime - animationTime > 600L;

@@ -1,0 +1,94 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="goal_complete_data" version="1.3.0" audacityversion="2.3.2" sel0="0.0000000000" sel1="0.0000000000" vpos="288" h="0.0000000000" zoom="61.4156414261" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="ARTIST" value="Anthony Hilyard"/>
+		<tag name="TITLE" value="Goal Complete"/>
+		<tag name="YEAR" value="2021"/>
+		<tag name="URL" value="https://anthonyhilyard.com"/>
+	</tags>
+	<wavetrack name="166540__qubodup__success-quest-complete-rpg-sound" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="0.794328" pan="0.0" colorindex="0">
+		<waveclip offset="-0.70608333" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="33892">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808037.au" len="33892" min="-0.318821" max="0.401084" rms="0.067803"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="261778">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808812.au" len="261778" min="-0.668572" max="0.889401" rms="0.065684"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="423293__suburbanwizard__fanfare" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="1.995262" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="273508">
+				<waveblock start="0">
+					<simpleblockfile filename="e08081a8.au" len="136754" min="-0.172383" max="0.201507" rms="0.025662"/>
+				</waveblock>
+				<waveblock start="136754">
+					<simpleblockfile filename="e08089d6.au" len="136754" min="-0.133223" max="0.135656" rms="0.018868"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="423293__suburbanwizard__fanfare" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="1.995262" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="273508">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808e1d.au" len="136754" min="-0.190252" max="0.20284" rms="0.027797"/>
+				</waveblock>
+				<waveblock start="136754">
+					<simpleblockfile filename="e0808f65.au" len="136754" min="-0.152572" max="0.128505" rms="0.020616"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Mix" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.258925" pan="-1.0" colorindex="0">
+		<waveclip offset="0.34630385" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="236013">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808bee.au" len="236013" min="-0.124875" max="0.123428" rms="0.005696"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Mix" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.584893" pan="1.0" colorindex="0">
+		<waveclip offset="0.34630385" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="236013">
+				<waveblock start="0">
+					<simpleblockfile filename="e080845d.au" len="236013" min="-0.048252" max="0.047817" rms="0.003348"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="272276__rollo145__cymbal" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="0.354813" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="201530">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808cb5.au" len="201530" min="-0.455024" max="0.427061" rms="0.053558"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="272276__rollo145__cymbal" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="0.354813" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="201530">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808993.au" len="201530" min="-0.44837" max="0.411854" rms="0.049169"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
