@@ -53,7 +53,6 @@ public class AdvancementPlaque
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
 
-	@SuppressWarnings("deprecation")
 	private Visibility drawPlaque(MatrixStack matrixStack, long displayTime)
 	{
 		DisplayInfo displayInfo = toast.advancement.getDisplay();
@@ -140,9 +139,29 @@ public class AdvancementPlaque
 				if (!hasPlayedSound)
 				{
 					hasPlayedSound = true;
-					if (displayInfo.getFrame() == FrameType.CHALLENGE)
+
+					// Play sound based on frame type.
+					switch (displayInfo.getFrame())
 					{
-						mc.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
+						case TASK:
+							if (!AdvancementPlaquesConfig.INSTANCE.muteTasks.get())
+							{
+								mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.TASK_COMPLETE.get(), 1.0f, 1.0f));
+							}
+							break;
+						case GOAL:
+							if (!AdvancementPlaquesConfig.INSTANCE.muteGoals.get())
+							{
+								mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.GOAL_COMPLETE.get(), 1.0f, 1.0f));
+							}
+							break;
+						default:
+						case CHALLENGE:
+							if (!AdvancementPlaquesConfig.INSTANCE.muteChallenges.get())
+							{
+								mc.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
+							}
+							break;
 					}
 				}
 			}
@@ -182,7 +201,6 @@ public class AdvancementPlaque
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean render(int screenWidth, int index, MatrixStack matrixStack)
 	{
 		long currentTime = Util.milliTime();
@@ -219,7 +237,6 @@ public class AdvancementPlaque
 		{
 			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 600.0f));
 			visibility = newVisibility;
-			visibility.playSound(mc.getSoundHandler());
 		}
 
 		return visibility == Visibility.HIDE && currentTime - animationTime > 600L;

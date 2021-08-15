@@ -47,6 +47,9 @@ public class AdvancementPlaquesConfig
 	public final DoubleValue challengeDuration;
 
 	public final ConfigValue<List<? extends String>> whitelist;
+	public final BooleanValue muteTasks;
+	public final BooleanValue muteGoals;
+	public final BooleanValue muteChallenges;
 
 	public AdvancementPlaquesConfig(ForgeConfigSpec.Builder build)
 	{
@@ -77,6 +80,9 @@ public class AdvancementPlaquesConfig
 		build.pop().push("functionality_options");
 
 		whitelist = build.comment("Whitelist of advancements to show plaques for.  Leave empty to display for all.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> ResourceLocation.isResouceNameValid((String)e) );
+		muteTasks = build.comment("If task sounds should be muted.").define("mute_tasks", false);
+		muteGoals = build.comment("If goal sounds should be muted.").define("mute_goals", false);
+		muteChallenges = build.comment("If challenge sounds should be muted.").define("mute_challenges", false);
 
 		build.pop().pop();
 	}
