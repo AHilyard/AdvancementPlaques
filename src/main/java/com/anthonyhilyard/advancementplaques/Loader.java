@@ -18,15 +18,11 @@ public class Loader
 
 	public Loader()
 	{
+		AdvancementPlaques mod = new AdvancementPlaques();
 		if (FMLEnvironment.dist == Dist.CLIENT)
 		{
-			AdvancementPlaques mod = new AdvancementPlaques();
 			FMLJavaModLoadingContext.get().getModEventBus().addListener(mod::onClientSetup);
 			ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AdvancementPlaquesConfig.SPEC);
-		}
-		else
-		{
-			LOGGER.error("Running on a dedicated server, disabling mod.");
 		}
 	}
 

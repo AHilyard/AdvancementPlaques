@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod.EventBusSubscriber(modid = Loader.MODID, bus = Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Loader.MODID, bus = Bus.MOD)
 public class AdvancementPlaques
 {
 	@SuppressWarnings("unused")

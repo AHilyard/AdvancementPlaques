@@ -140,29 +140,37 @@ public class AdvancementPlaque
 				{
 					hasPlayedSound = true;
 
-					// Play sound based on frame type.
-					switch (displayInfo.getFrame())
+					try
 					{
-						case TASK:
-							if (!AdvancementPlaquesConfig.INSTANCE.muteTasks.get())
-							{
-								mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.TASK_COMPLETE.get(), 1.0f, 1.0f));
-							}
-							break;
-						case GOAL:
-							if (!AdvancementPlaquesConfig.INSTANCE.muteGoals.get())
-							{
-								mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.GOAL_COMPLETE.get(), 1.0f, 1.0f));
-							}
-							break;
-						default:
-						case CHALLENGE:
-							if (!AdvancementPlaquesConfig.INSTANCE.muteChallenges.get())
-							{
-								mc.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
-							}
-							break;
+						// Play sound based on frame type.
+						switch (displayInfo.getFrame())
+						{
+							case TASK:
+								if (!AdvancementPlaquesConfig.INSTANCE.muteTasks.get())
+								{
+									mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.TASK_COMPLETE.get(), 1.0f, 1.0f));
+								}
+								break;
+							case GOAL:
+								if (!AdvancementPlaquesConfig.INSTANCE.muteGoals.get())
+								{
+									mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.GOAL_COMPLETE.get(), 1.0f, 1.0f));
+								}
+								break;
+							default:
+							case CHALLENGE:
+								if (!AdvancementPlaquesConfig.INSTANCE.muteChallenges.get())
+								{
+									mc.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
+								}
+								break;
+						}
 					}
+					catch (NullPointerException e)
+					{
+						Loader.LOGGER.warn("Tried to play a custom sound for an advancement, but that sound was not registered!  Install Advancement Plaques on the server or mute tasks and goals in the config file.");
+					}
+					
 				}
 			}
 
