@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[31,)"
 license="MIT"
 
 [[mods]]
@@ -15,20 +15,20 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="forge"
 	mandatory=true
-	versionRange="[36,)"
+	versionRange="[31,)"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="minecraft"
 	mandatory=true
-	versionRange="[1.16.5]"
+	versionRange="[1.15.2]"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="toastcontrol"
 	mandatory=false
-	versionRange="[4.3,)"
+	versionRange="[3.0,)"
 	ordering="NONE"
 	side="BOTH"

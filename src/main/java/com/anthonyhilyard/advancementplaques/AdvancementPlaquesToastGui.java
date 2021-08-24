@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Deque;
 
 import com.google.common.collect.Queues;
-import com.mojang.blaze3d.matrix.MatrixStack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +34,7 @@ public class AdvancementPlaquesToastGui extends ToastGui
 	}
 
 	@Override
-	public void add(IToast toastIn)
+	public void addToast(IToast toastIn)
 	{
 		if (toastIn instanceof AdvancementToast)
 		{
@@ -52,17 +51,16 @@ public class AdvancementPlaquesToastGui extends ToastGui
 			}
 		}
 
-		super.add(toastIn);
+		super.addToast(toastIn);
 	}
 
 	@Override
-	// Render
-	public void func_238541_a_(MatrixStack stack)
+	public void render()
 	{
-		if (!mc.gameSettings.hideGUI)
+		if (!mc.options.hideGui)
 		{
 			// Do toasts.
-			super.func_238541_a_(stack);
+			super.render();
 
 			try
 			{
@@ -100,7 +98,7 @@ public class AdvancementPlaquesToastGui extends ToastGui
 			{
 				AdvancementPlaque toastinstance = plaques[i];
 
-				if (toastinstance != null && toastinstance.render(mc.getMainWindow().getScaledWidth(), i, stack))
+				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i))
 				{
 					plaques[i] = null;
 				}

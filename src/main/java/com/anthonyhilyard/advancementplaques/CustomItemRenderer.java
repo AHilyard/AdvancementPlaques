@@ -41,57 +41,57 @@ public class CustomItemRenderer extends ItemRenderer
 		if (iconFrameBuffer == null)
 		{
 			// Use 96 x 96 pixels for the icon frame buffer so at 1.5 scale we get 4x resolution (for smooth icons on larger gui scales).
-			iconFrameBuffer = new Framebuffer(96, 96, true, Minecraft.IS_RUNNING_ON_MAC);
-			iconFrameBuffer.setFramebufferColor(0.0F, 0.0F, 0.0F, 0.0F);
+			iconFrameBuffer = new Framebuffer(96, 96, true, Minecraft.ON_OSX);
+			iconFrameBuffer.setClearColor(0.0F, 0.0F, 0.0F, 0.0F);
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	public void renderItemModelIntoGUIWithAlpha(ItemStack stack, int x, int y, float alpha)
 	{
-		IBakedModel bakedModel = mc.getItemRenderer().getItemModelWithOverrides(stack, null, null);
-		Framebuffer lastFrameBuffer = mc.getFramebuffer();
+		IBakedModel bakedModel = mc.getItemRenderer().getModel(stack, null, null);
+		Framebuffer lastFrameBuffer = mc.getMainRenderTarget();
 
 		// Bind the icon framebuffer so we can render to texture.
-		iconFrameBuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
-		iconFrameBuffer.bindFramebuffer(true);
+		iconFrameBuffer.clear(Minecraft.ON_OSX);
+		iconFrameBuffer.bindWrite(true);
 		
-		RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
+		RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 		RenderSystem.matrixMode(GL11.GL_PROJECTION);
 		RenderSystem.pushMatrix();
 		RenderSystem.loadIdentity();
-		RenderSystem.ortho(0.0D, iconFrameBuffer.framebufferWidth, iconFrameBuffer.framebufferHeight, 0.0D, 1000.0D, 3000.0D);
+		RenderSystem.ortho(0.0D, iconFrameBuffer.width, iconFrameBuffer.height, 0.0D, 1000.0D, 3000.0D);
 		RenderSystem.matrixMode(GL11.GL_MODELVIEW);
 		RenderSystem.pushMatrix();
 		RenderSystem.loadIdentity();
 		RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
-		RenderHelper.setupGui3DDiffuseLighting();
+		RenderHelper.setupFor3DItems();
 
-		mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmapDirect(false, false);
+		mc.getTextureManager().bind(AtlasTexture.LOCATION_BLOCKS);
+		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS).setFilter(false, false);
 		RenderSystem.enableRescaleNormal();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.defaultAlphaFunc();
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-		RenderSystem.translatef(48.0f, 48.0f, 150.0f + this.zLevel);
+		RenderSystem.translatef(48.0f, 48.0f, 150.0f + this.blitOffset);
 		RenderSystem.scalef(1.0f, -1.0f, 1.0f);
 		RenderSystem.scalef(96.0f, 96.0f, 96.0f);
 		MatrixStack matrixStack = new MatrixStack();
-		IRenderTypeBuffer.Impl renderBuffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-		boolean isSideLit = !bakedModel.isSideLit();
+		IRenderTypeBuffer.Impl renderBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
+		boolean isSideLit = !bakedModel.usesBlockLight();
 		if (isSideLit)
 		{
-			RenderHelper.setupGuiFlatDiffuseLighting();
+			RenderHelper.setupForFlatItems();
 		}
 
-		renderItem(stack, ItemCameraTransforms.TransformType.GUI, false, matrixStack, renderBuffer, 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
-		renderBuffer.finish();
+		render(stack, ItemCameraTransforms.TransformType.GUI, false, matrixStack, renderBuffer, 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
+		renderBuffer.endBatch();
 		RenderSystem.enableDepthTest();
 		if (isSideLit)
 		{
-			RenderHelper.setupGui3DDiffuseLighting();
+			RenderHelper.setupFor3DItems();
 		}
 
 		RenderSystem.disableRescaleNormal();
@@ -103,10 +103,10 @@ public class CustomItemRenderer extends ItemRenderer
 		// Rebind the previous framebuffer, if there was one.
 		if (lastFrameBuffer != null)
 		{
-			lastFrameBuffer.bindFramebuffer(true);
+			lastFrameBuffer.bindWrite(true);
 
 			// Blit from the texture we just rendered to, respecting the alpha value given.
-			iconFrameBuffer.bindFramebufferTexture();
+			iconFrameBuffer.bindRead();
 			RenderSystem.enableAlphaTest();
 			RenderSystem.enableBlend();
 			RenderSystem.defaultBlendFunc();
@@ -115,11 +115,11 @@ public class CustomItemRenderer extends ItemRenderer
 			RenderSystem.color4f(1.0f, 1.0f, 1.0f, alpha);
 			RenderSystem.scalef(1.0f, -1.0f, 1.0f);
 
-			AbstractGui.blit(new MatrixStack(), x, y - 18, 16, 16, 0, 0, iconFrameBuffer.framebufferTextureWidth, iconFrameBuffer.framebufferTextureHeight, iconFrameBuffer.framebufferTextureWidth, iconFrameBuffer.framebufferTextureHeight);
+			AbstractGui.blit(x, y - 18, 16, 16, 0, 0, iconFrameBuffer.width, iconFrameBuffer.height, iconFrameBuffer.width, iconFrameBuffer.height);
 		}
 		else
 		{
-			iconFrameBuffer.unbindFramebuffer();
+			iconFrameBuffer.unbindWrite();
 		}
 	}
 }

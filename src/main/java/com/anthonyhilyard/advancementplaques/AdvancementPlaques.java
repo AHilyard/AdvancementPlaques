@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -35,9 +35,10 @@ public class AdvancementPlaques
 		SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void onClientSetup(FMLClientSetupEvent event)
 	{
-		event.enqueueWork(new Runnable()
+		DeferredWorkQueue.runLater(new Runnable()
 		{
 			@Override
 			public void run()
@@ -56,7 +57,7 @@ public class AdvancementPlaques
 
 					if (newToastGui != null)
 					{
-						Minecraft.getInstance().toastGui = newToastGui;
+						Minecraft.getInstance().toast = newToastGui;
 					}
 					else
 					{

@@ -1,6 +1,5 @@
 package com.anthonyhilyard.advancementplaques;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.advancements.DisplayInfo;
@@ -9,10 +8,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.AdvancementToast;
 import net.minecraft.client.gui.toasts.IToast.Visibility;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.LanguageMap;
 
 public class AdvancementPlaque
 {
@@ -53,7 +52,7 @@ public class AdvancementPlaque
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
 
-	private Visibility drawPlaque(MatrixStack matrixStack, long displayTime)
+	private Visibility drawPlaque(long displayTime)
 	{
 		DisplayInfo displayInfo = toast.advancement.getDisplay();
 
@@ -90,7 +89,7 @@ public class AdvancementPlaque
 				}
 				int alphaMask = (int)(alpha * 255.0f);
 
-				mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUES);
+				mc.getTextureManager().bind(AdvancementPlaques.TEXTURE_PLAQUES);
 				RenderSystem.enableBlend();
 				RenderSystem.color4f(1.0f, 1.0f, 1.0f, alpha);
 				int frameOffset = 0;
@@ -102,7 +101,7 @@ public class AdvancementPlaque
 				{
 					frameOffset = 2;
 				}
-				AdvancementPlaquesToastGui.blit(matrixStack, -1, -1, 0, height() * frameOffset, width(), height(), 256, 256);
+				AdvancementPlaquesToastGui.blit(-1, -1, 0, height() * frameOffset, width(), height(), 256, 256);
 
 				// Only bother drawing text if alpha is greater than 0.1.
 				if (alpha > 0.1f)
@@ -110,23 +109,23 @@ public class AdvancementPlaque
 					alphaMask <<= 24;
 
 					// Text like "Challenge Complete!" at the top of the plaque.
-					int typeWidth = mc.fontRenderer.getStringPropertyWidth(displayInfo.getFrame().getTranslatedToast());
-					mc.fontRenderer.func_243248_b(matrixStack, displayInfo.getFrame().getTranslatedToast(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, 0x332200 | alphaMask);
+					int typeWidth = mc.font.width(I18n.get("advancements.toast." + displayInfo.getFrame().getName()));
+					mc.font.draw(I18n.get("advancements.toast." + displayInfo.getFrame().getName()), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, 0x332200 | alphaMask);
 
-					int titleWidth = mc.fontRenderer.getStringPropertyWidth(displayInfo.getTitle());
+					int titleWidth = mc.font.width(displayInfo.getTitle().getString());
 
 					// If the width of the advancement title is less than the full available width, display it normally.
 					if (titleWidth <= (220 / 1.5f))
 					{
 						RenderSystem.pushMatrix();
 						RenderSystem.scalef(1.5f, 1.5f, 1.0f);
-						mc.fontRenderer.func_238422_b_(matrixStack, LanguageMap.getInstance().func_241870_a(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(displayInfo.getTitle().getString(), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, 0xFFFFFF | alphaMask);
 						RenderSystem.popMatrix();
 					}
 					// Otherwise, display it with a smaller (default) font.
 					else
 					{
-						mc.fontRenderer.func_238422_b_(matrixStack, LanguageMap.getInstance().func_241870_a(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(displayInfo.getTitle().getString(), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, 0xFFFFFF | alphaMask);
 					}
 				}
 
@@ -148,20 +147,20 @@ public class AdvancementPlaque
 							case TASK:
 								if (!AdvancementPlaquesConfig.INSTANCE.muteTasks.get())
 								{
-									mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.TASK_COMPLETE.get(), 1.0f, 1.0f));
+									mc.getSoundManager().play(SimpleSound.forUI(AdvancementPlaques.TASK_COMPLETE.get(), 1.0f, 1.0f));
 								}
 								break;
 							case GOAL:
 								if (!AdvancementPlaquesConfig.INSTANCE.muteGoals.get())
 								{
-									mc.getSoundHandler().play(SimpleSound.master(AdvancementPlaques.GOAL_COMPLETE.get(), 1.0f, 1.0f));
+									mc.getSoundManager().play(SimpleSound.forUI(AdvancementPlaques.GOAL_COMPLETE.get(), 1.0f, 1.0f));
 								}
 								break;
 							default:
 							case CHALLENGE:
 								if (!AdvancementPlaquesConfig.INSTANCE.muteChallenges.get())
 								{
-									mc.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
+									mc.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
 								}
 								break;
 						}
@@ -187,18 +186,15 @@ public class AdvancementPlaque
 				RenderSystem.defaultBlendFunc();
 				RenderSystem.defaultAlphaFunc();
 				RenderSystem.color4f(1.0f, 1.0f, 1.0f, alpha);
-				matrixStack.push();
-				matrixStack.translate(0.0f, 0.0f, 95.0f);
-				mc.getTextureManager().bindTexture(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
+				mc.getTextureManager().bind(AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
 				if (displayInfo.getFrame() == FrameType.CHALLENGE)
 				{
-					AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, height() + 32, width() + 32, height() + 32, 512, 512);
+					AdvancementPlaquesToastGui.blit(-16, -16, 0, height() + 32, width() + 32, height() + 32, 512, 512);
 				}
 				else
 				{
-					AdvancementPlaquesToastGui.blit(matrixStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
+					AdvancementPlaquesToastGui.blit(-16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
 				}
-				matrixStack.pop();
 			}
 
 			return displayTime >= fadeInTime + fadeOutTime + duration ? Visibility.HIDE : Visibility.SHOW;
@@ -209,13 +205,13 @@ public class AdvancementPlaque
 		}
 	}
 
-	public boolean render(int screenWidth, int index, MatrixStack matrixStack)
+	public boolean render(int screenWidth, int index)
 	{
-		long currentTime = Util.milliTime();
+		long currentTime = Util.getMillis();
 		if (animationTime == -1L)
 		{
 			animationTime = currentTime;
-			visibility.playSound(mc.getSoundHandler());
+			visibility.playSound(mc.getSoundManager());
 		}
 
 		if (visibility == Visibility.SHOW && currentTime - animationTime <= 600L)
@@ -227,17 +223,17 @@ public class AdvancementPlaque
 		RenderSystem.disableDepthTest();
 		if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
 		{
-			RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
+			RenderSystem.translatef((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
 									AdvancementPlaquesConfig.INSTANCE.distance.get(),
 									900.0f + index);
 		}
 		else
 		{
-			RenderSystem.translatef((float)(mc.getMainWindow().getScaledWidth() - width()) / 2.0f,
-									(float)(mc.getMainWindow().getScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
+			RenderSystem.translatef((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
+									(float)(mc.getWindow().getGuiScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
 									900.0f + index);
 		}
-		Visibility newVisibility = drawPlaque(matrixStack, currentTime - visibleTime);
+		Visibility newVisibility = drawPlaque(currentTime - visibleTime);
 		RenderSystem.enableDepthTest();
 		RenderSystem.popMatrix();
 
