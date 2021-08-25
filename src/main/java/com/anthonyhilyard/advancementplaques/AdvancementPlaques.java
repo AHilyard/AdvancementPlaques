@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -56,7 +55,7 @@ public class AdvancementPlaques
 
 					if (newToastGui != null)
 					{
-						Minecraft.getInstance().toastGui = newToastGui;
+						Minecraft.getInstance().toast = newToastGui;
 					}
 					else
 					{

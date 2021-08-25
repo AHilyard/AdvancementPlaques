@@ -27,6 +27,13 @@ description="Replaces standard advancement toasts with fancy plaques."
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
+	modId="iceberg"
+	mandatory=true
+	versionRange="[1,)"
+	ordering="NONE"
+	side="BOTH"
+
+[[dependencies.advancementplaques]]
 	modId="toastcontrol"
 	mandatory=false
 	versionRange="[4.3,)"

@@ -79,7 +79,7 @@ public class AdvancementPlaquesConfig
 
 		build.pop().push("functionality_options");
 
-		whitelist = build.comment("Whitelist of advancements to show plaques for.  Leave empty to display for all.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> ResourceLocation.isResouceNameValid((String)e) );
+		whitelist = build.comment("Whitelist of advancements to show plaques for.  Leave empty to display for all.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> ResourceLocation.isValidResourceLocation((String)e) );
 		muteTasks = build.comment("If task sounds should be muted.").define("mute_tasks", false);
 		muteGoals = build.comment("If goal sounds should be muted.").define("mute_goals", false);
 		muteChallenges = build.comment("If challenge sounds should be muted.").define("mute_challenges", false);

@@ -3,6 +3,7 @@ package com.anthonyhilyard.advancementplaques;
 import java.util.Arrays;
 import java.util.Deque;
 
+import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -34,7 +35,7 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 	}
 
 	@Override
-	public void add(IToast toastIn)
+	public void addToast(IToast toastIn)
 	{
 		if (toastIn instanceof AdvancementToast)
 		{
@@ -51,17 +52,16 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 			}
 		}
 
-		super.add(toastIn);
+		super.addToast(toastIn);
 	}
 
 	@Override
-	// Render
-	public void func_238541_a_(MatrixStack stack)
+	public void render(MatrixStack stack)
 	{
-		if (!mc.gameSettings.hideGUI)
+		if (!mc.options.hideGui)
 		{
 			// Do toasts.
-			super.func_238541_a_(stack);
+			super.render(stack);
 
 			try
 			{
@@ -99,7 +99,7 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 			{
 				AdvancementPlaque toastinstance = plaques[i];
 
-				if (toastinstance != null && toastinstance.render(mc.getMainWindow().getScaledWidth(), i, stack))
+				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
 				{
 					plaques[i] = null;
 				}

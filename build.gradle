@@ -16,12 +16,14 @@ archivesBaseName = name + '-' + mcVersion
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-	mappings 'snapshot', project.properties.mappingsVersion
+	mappings channel: 'official', version: project.mcVersion
+
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	runs {
 		client = {
 			properties 'forge.logging.markers': ''
 			properties 'forge.logging.console.level': 'debug'
+			properties 'terminal.ansi': 'true'
 			workingDirectory project.file('run').canonicalPath
 			source sourceSets.main
 		}
@@ -65,6 +67,8 @@ sourceSets {
 
 dependencies {
 	minecraft 'net.minecraftforge:forge:' + project.properties.mcVersion + '-' + forgeVersion
+	compile 'curse.maven:iceberg-520110:3439178'
+	implementation fg.deobf('curse.maven:placebo-283644:3437009')
 	implementation fg.deobf('curse.maven:toastcontrol-271740:3172881')
 	implementation fg.deobf('curse.maven:jade-324717:3302544')
 }
