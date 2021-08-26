@@ -49,7 +49,7 @@ public class AdvancementPlaque
 
 	private float getVisibility(long currentTime)
 	{
-		float f = MathHelper.clamp((float)(currentTime - animationTime) / 600.0f, 0.0f, 1.0f);
+		float f = MathHelper.clamp((float)(currentTime - animationTime) / 200.0f, 0.0f, 1.0f);
 		f = f * f;
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
@@ -221,7 +221,7 @@ public class AdvancementPlaque
 			visibility.playSound(mc.getSoundManager());
 		}
 
-		if (visibility == Visibility.SHOW && currentTime - animationTime <= 600L)
+		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L)
 		{
 			visibleTime = currentTime;
 		}
@@ -246,10 +246,10 @@ public class AdvancementPlaque
 
 		if (newVisibility != visibility)
 		{
-			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 600.0f));
+			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 200.0f));
 			visibility = newVisibility;
 		}
 
-		return visibility == Visibility.HIDE && currentTime - animationTime > 600L;
+		return visibility == Visibility.HIDE && currentTime - animationTime > 200L;
 	}
 }
