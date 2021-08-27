@@ -3,6 +3,7 @@ package com.anthonyhilyard.advancementplaques;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.Util;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
@@ -49,7 +50,7 @@ public class AdvancementPlaque
 
 	private float getVisibility(long currentTime)
 	{
-		float f = Mth.clamp((float)(currentTime - animationTime) / 600.0f, 0.0f, 1.0f);
+		float f = Mth.clamp((float)(currentTime - animationTime) / 200.0f, 0.0f, 1.0f);
 		f = f * f;
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
@@ -88,6 +89,11 @@ public class AdvancementPlaque
 				if (displayTime > duration)
 				{
 					alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - duration) / 1000.0f));
+					
+					if (FabricLoader.getInstance().isModLoaded("canvas"))
+					{
+						alpha = 0;
+					}
 				}
 				int alphaMask = (int)(alpha * 255.0f);
 
@@ -140,8 +146,18 @@ public class AdvancementPlaque
 				modelViewStack.scale(1.5f, 1.5f, 1.0f);
 
 				RenderSystem.applyModelViewMatrix();
-				itemRenderer.renderGuiItemWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
-				
+				if (FabricLoader.getInstance().isModLoaded("canvas"))
+				{
+					if (alpha > 0)
+					{
+						modelViewStack.translate(0.0f, 0.0f, -2000.0f);
+						mc.getItemRenderer().renderGuiItem(displayInfo.getIcon(), 1, 1);
+					}
+				}
+				else
+				{
+					itemRenderer.renderGuiItemWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
+				}
 				
 				modelViewStack.popPose();
 				RenderSystem.applyModelViewMatrix();
@@ -225,7 +241,7 @@ public class AdvancementPlaque
 			animationTime = currentTime;
 		}
 
-		if (visibility == Visibility.SHOW && currentTime - animationTime <= 600L)
+		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L)
 		{
 			visibleTime = currentTime;
 		}
@@ -255,10 +271,10 @@ public class AdvancementPlaque
 
 		if (newVisibility != visibility)
 		{
-			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 600.0f));
+			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 200.0f));
 			visibility = newVisibility;
 		}
 
-		return visibility == Visibility.HIDE && currentTime - animationTime > 600L;
+		return visibility == Visibility.HIDE && currentTime - animationTime > 200L;
 	}
 }

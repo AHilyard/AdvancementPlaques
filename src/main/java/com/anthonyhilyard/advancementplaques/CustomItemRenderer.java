@@ -23,7 +23,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -84,7 +84,7 @@ public class CustomItemRenderer extends ItemRenderer
 		boolean flag = !bakedModel.usesBlockLight();
 		if (flag) { Lighting.setupForFlatItems(); }
 
-		render(stack, ItemTransforms.TransformType.GUI, false, poseStack, multibuffersource$buffersource, 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
+		render(stack, TransformType.GUI, false, poseStack, multibuffersource$buffersource, 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
 		multibuffersource$buffersource.endBatch();
 		RenderSystem.enableDepthTest();
 		if (flag) { Lighting.setupFor3DItems(); }
