@@ -20,6 +20,10 @@ repositories {
 		name = "Cloth API"
 		url = "https://maven.shedaniel.me/"
 	}
+	maven { 
+		name = "WTHIT"
+		url "https://maven.bai.lol" 
+	}
 }
 
 configurations {
@@ -43,7 +47,7 @@ dependencies {
 
 	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") { exclude(group: "net.fabricmc.fabric-api") }
 
-	modCompileOnly 'curse.maven:wthit-440979:3401714'
+	modCompileOnly "mcp.mobius.waila:wthit:fabric-${wthit_version}"
 }
 
 loom {
