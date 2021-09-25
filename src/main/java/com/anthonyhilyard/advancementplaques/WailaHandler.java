@@ -9,7 +9,7 @@ public class WailaHandler
 
 	public static void disableWaila()
 	{
-		boolean currentState = Waila.config.get().getGeneral().shouldDisplayTooltip();
+		boolean currentState = Waila.config.get().getGeneral().isDisplayTooltip();
 		if (!disabled || currentState)
 		{
 			previousState = currentState;
