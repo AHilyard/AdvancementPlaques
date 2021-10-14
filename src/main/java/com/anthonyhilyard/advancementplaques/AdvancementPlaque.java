@@ -1,5 +1,6 @@
 package com.anthonyhilyard.advancementplaques;
 
+import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -49,7 +50,7 @@ public class AdvancementPlaque
 
 	private float getVisibility(long currentTime)
 	{
-		float f = Mth.clamp((float)(currentTime - animationTime) / 600.0f, 0.0f, 1.0f);
+		float f = Mth.clamp((float)(currentTime - animationTime) / 200.0f, 0.0f, 1.0f);
 		f = f * f;
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
@@ -140,7 +141,7 @@ public class AdvancementPlaque
 				modelViewStack.scale(1.5f, 1.5f, 1.0f);
 
 				RenderSystem.applyModelViewMatrix();
-				itemRenderer.renderGuiItemWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
+				itemRenderer.renderItemModelIntoGUIWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
 				
 				modelViewStack.popPose();
 				RenderSystem.applyModelViewMatrix();
@@ -225,7 +226,7 @@ public class AdvancementPlaque
 			visibility.playSound(mc.getSoundManager());
 		}
 
-		if (visibility == Visibility.SHOW && currentTime - animationTime <= 600L)
+		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L)
 		{
 			visibleTime = currentTime;
 		}
@@ -255,10 +256,10 @@ public class AdvancementPlaque
 
 		if (newVisibility != visibility)
 		{
-			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 600.0f));
+			animationTime = currentTime - (long)((int)((1.0f - getVisibility(currentTime)) * 200.0f));
 			visibility = newVisibility;
 		}
 
-		return visibility == Visibility.HIDE && currentTime - animationTime > 600L;
+		return visibility == Visibility.HIDE && currentTime - animationTime > 200L;
 	}
 }
