@@ -90,7 +90,16 @@ public class AdvancementPlaque
 				{
 					alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - duration) / 1000.0f));
 				}
-				int alphaMask = (int)(alpha * 255.0f);
+
+				// Grab the title color and apply the current alpha to it.
+				int tempColor = (int)AdvancementPlaquesConfig.INSTANCE.titleColor.get().longValue();
+				int tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
+				int titleColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
+
+				// Grab the name color and apply the current alpha to it.
+				tempColor = (int)AdvancementPlaquesConfig.INSTANCE.nameColor.get().longValue();
+				tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
+				int nameColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
 
 				RenderSystem.enableBlend();
 				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
@@ -109,11 +118,9 @@ public class AdvancementPlaque
 				// Only bother drawing text if alpha is greater than 0.1.
 				if (alpha > 0.1f)
 				{
-					alphaMask <<= 24;
-					
 					// Text like "Challenge Complete!" at the top of the plaque.
 					int typeWidth = mc.font.width(displayInfo.getFrame().getDisplayName());
-					mc.font.draw(poseStack, displayInfo.getFrame().getDisplayName(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, 0x332200 | alphaMask);
+					mc.font.draw(poseStack, displayInfo.getFrame().getDisplayName(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, titleColor);
 
 					int titleWidth = mc.font.width(displayInfo.getTitle());
 
@@ -124,14 +131,14 @@ public class AdvancementPlaque
 						modelViewStack.pushPose();
 						modelViewStack.scale(1.5f, 1.5f, 1.0f);
 						RenderSystem.applyModelViewMatrix();
-						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, nameColor);
 						modelViewStack.popPose();
 						RenderSystem.applyModelViewMatrix();
 					}
 					// Otherwise, display it with a smaller (default) font.
 					else
 					{
-						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, nameColor);
 					}
 				}
 
