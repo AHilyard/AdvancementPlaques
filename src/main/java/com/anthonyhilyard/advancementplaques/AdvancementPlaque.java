@@ -54,7 +54,6 @@ public class AdvancementPlaque
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
 
-	@SuppressWarnings("deprecation")
 	private Visibility drawPlaque(MatrixStack matrixStack, long displayTime)
 	{
 		DisplayInfo displayInfo = toast.advancement.getDisplay();
@@ -90,7 +89,16 @@ public class AdvancementPlaque
 				{
 					alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - duration) / 1000.0f));
 				}
-				int alphaMask = (int)(alpha * 255.0f);
+
+				// Grab the title color and apply the current alpha to it.
+				int tempColor = (int)AdvancementPlaquesConfig.INSTANCE.titleColor.get().longValue();
+				int tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
+				int titleColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
+
+				// Grab the name color and apply the current alpha to it.
+				tempColor = (int)AdvancementPlaquesConfig.INSTANCE.nameColor.get().longValue();
+				tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
+				int nameColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
 
 				mc.getTextureManager().bind(AdvancementPlaques.TEXTURE_PLAQUES);
 				RenderSystem.enableBlend();
@@ -109,11 +117,9 @@ public class AdvancementPlaque
 				// Only bother drawing text if alpha is greater than 0.1.
 				if (alpha > 0.1f)
 				{
-					alphaMask <<= 24;
-
 					// Text like "Challenge Complete!" at the top of the plaque.
 					int typeWidth = mc.font.width(displayInfo.getFrame().getDisplayName());
-					mc.font.draw(matrixStack, displayInfo.getFrame().getDisplayName(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, 0x332200 | alphaMask);
+					mc.font.draw(matrixStack, displayInfo.getFrame().getDisplayName(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, titleColor);
 
 					int titleWidth = mc.font.width(displayInfo.getTitle());
 
@@ -122,13 +128,13 @@ public class AdvancementPlaque
 					{
 						RenderSystem.pushMatrix();
 						RenderSystem.scalef(1.5f, 1.5f, 1.0f);
-						mc.font.draw(matrixStack, LanguageMap.getInstance().getVisualOrder(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(matrixStack, LanguageMap.getInstance().getVisualOrder(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, nameColor);
 						RenderSystem.popMatrix();
 					}
 					// Otherwise, display it with a smaller (default) font.
 					else
 					{
-						mc.font.draw(matrixStack, LanguageMap.getInstance().getVisualOrder(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(matrixStack, LanguageMap.getInstance().getVisualOrder(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, nameColor);
 					}
 				}
 
@@ -211,7 +217,6 @@ public class AdvancementPlaque
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean render(int screenWidth, int index, MatrixStack matrixStack)
 	{
 		long currentTime = Util.getMillis();
