@@ -1,6 +1,7 @@
 package com.anthonyhilyard.advancementplaques;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,6 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast.Visibility;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.locale.Language;
@@ -57,6 +60,13 @@ public class AdvancementPlaque
 
 	private Visibility drawPlaque(PoseStack poseStack, long displayTime)
 	{
+		// Don't show plaques while paused or loading.
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.screen instanceof PauseScreen || mc.screen instanceof LevelLoadingScreen)
+		{
+			return Visibility.SHOW;
+		}
+
 		DisplayInfo displayInfo = toast.advancement.getDisplay();
 
 		if (displayInfo != null)
@@ -95,7 +105,16 @@ public class AdvancementPlaque
 						alpha = 0;
 					}
 				}
-				int alphaMask = (int)(alpha * 255.0f);
+
+				// Grab the title color and apply the current alpha to it.
+				int tempColor = (int)AdvancementPlaquesConfig.INSTANCE.titleColor;
+				int tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
+				int titleColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
+
+				// Grab the name color and apply the current alpha to it.
+				tempColor = (int)AdvancementPlaquesConfig.INSTANCE.nameColor;
+				tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
+				int nameColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
 
 				RenderSystem.enableBlend();
 				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
@@ -114,11 +133,9 @@ public class AdvancementPlaque
 				// Only bother drawing text if alpha is greater than 0.1.
 				if (alpha > 0.1f)
 				{
-					alphaMask <<= 24;
-					
 					// Text like "Challenge Complete!" at the top of the plaque.
 					int typeWidth = mc.font.width(displayInfo.getFrame().getDisplayName());
-					mc.font.draw(poseStack, displayInfo.getFrame().getDisplayName(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, 0x332200 | alphaMask);
+					mc.font.draw(poseStack, displayInfo.getFrame().getDisplayName(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, titleColor);
 
 					int titleWidth = mc.font.width(displayInfo.getTitle());
 
@@ -129,14 +146,14 @@ public class AdvancementPlaque
 						modelViewStack.pushPose();
 						modelViewStack.scale(1.5f, 1.5f, 1.0f);
 						RenderSystem.applyModelViewMatrix();
-						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, nameColor);
 						modelViewStack.popPose();
 						RenderSystem.applyModelViewMatrix();
 					}
 					// Otherwise, display it with a smaller (default) font.
 					else
 					{
-						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, 0xFFFFFF | alphaMask);
+						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, nameColor);
 					}
 				}
 
@@ -156,7 +173,7 @@ public class AdvancementPlaque
 				}
 				else
 				{
-					itemRenderer.renderGuiItemWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
+					itemRenderer.renderItemModelIntoGUIWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
 				}
 				
 				modelViewStack.popPose();
@@ -252,16 +269,17 @@ public class AdvancementPlaque
 
 		if (AdvancementPlaquesConfig.INSTANCE.onTop)
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
+			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset,
 									 AdvancementPlaquesConfig.INSTANCE.distance,
 									 900.0f + index);
 		}
 		else
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
+			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset,
 									 (float)(mc.getWindow().getGuiScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance)),
 									 900.0f + index);
 		}
+
 		RenderSystem.applyModelViewMatrix();
 		Visibility newVisibility = drawPlaque(poseStack, currentTime - visibleTime);
 

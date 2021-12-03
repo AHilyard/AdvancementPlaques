@@ -3,6 +3,7 @@ package com.anthonyhilyard.advancementplaques;
 import java.util.Arrays;
 import java.util.Deque;
 
+import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 import com.mojang.blaze3d.vertex.PoseStack;
 

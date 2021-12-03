@@ -27,6 +27,8 @@ public class AdvancementPlaquesConfig implements ConfigData
 	public boolean onTop = true;
 	@Comment("The distance from the top or bottom of the screen, in pixels.")
 	public int distance = 16;
+	@Comment("The horizontal offset from the center, in pixels.")
+	public int horizontalOffset = 0;
 	@Comment("Hide waila/hwyla/jade popups while plaques are showing.")
 	public boolean hideWaila = false;
 
@@ -36,6 +38,11 @@ public class AdvancementPlaquesConfig implements ConfigData
 	public boolean goals = true;
 	@Comment("If plaques should show for challenge advancements (high-difficulty advancements).")
 	public boolean challenges = true;
+
+	@Comment("Text color to use for plaque titles (like \"Advancement made!\"). Can be entered as an 8-digit LOWERCASE hex color code 0xaarrggbb for convenience.")
+	public long titleColor = 0xFF332200L;
+	@Comment("Text color to use for advancement names on plaques. Can be entered as an 8-digit LOWERCASE hex color code 0xaarrggbb for convenience.")
+	public long nameColor = 0xFFFFFFFFL;
 
 	@Comment("Duration of the shiny effect fade in for tasks.")
 	public double taskEffectFadeInTime = 0.5;
@@ -66,14 +73,4 @@ public class AdvancementPlaquesConfig implements ConfigData
 	public boolean muteGoals = false;
 	@Comment("If challenge sounds should be muted.")
 	public boolean muteChallenges = false;
-
-	@Override
-	public void validatePostLoad()
-	{
-		Loader.LOGGER.info("Whitelisted advancements:");
-		for (String str : whitelist)
-		{
-			Loader.LOGGER.info(str);
-		}
-	}
 }

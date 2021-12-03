@@ -1,12 +1,12 @@
 plugins {
-	id 'fabric-loom' version '0.9-SNAPSHOT'
+	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
-archivesBaseName = name + '-' + minecraft_version + '-fabric'
+archivesBaseName = project.name + '-' + project.mcVersion + '-fabric'
 
 sourceSets.main.java.srcDirs += 'java'
 sourceSets.main.resources.srcDirs += 'resources'
@@ -26,37 +26,30 @@ repositories {
 	}
 }
 
-configurations {
-	provided
-}
-
 sourceSets {
 	main {
 		resources {
 			srcDir 'src/generated/resources'
 		}
-		compileClasspath += configurations.provided
 	}
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	minecraft "com.mojang:minecraft:${project.mcVersion}"
 	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc:fabric-loader:${project.loaderVersion}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricVersion}"
+	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.clothVersion}") { exclude(group: "net.fabricmc.fabric-api") }
 
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") { exclude(group: "net.fabricmc.fabric-api") }
-
-	modCompileOnly "mcp.mobius.waila:wthit:fabric-${wthit_version}"
+	modImplementation "curse.maven:iceberg-539382:3535221"
+	modCompileOnly "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
 }
 
 loom {
 	accessWidenerPath = file("src/main/resources/${project.name.toLowerCase()}.accesswidener")
 }
 
-// Process resources on build
 processResources {
-	// This will ensure that this task is redone when the versions change.
 	inputs.property 'version', project.version
 
 	filesMatching("fabric.mod.json") {
@@ -64,10 +57,9 @@ processResources {
 	}
 }
 
-
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	it.options.release = 16
+	it.options.release = 17
 }
 
 java {
@@ -75,9 +67,6 @@ java {
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
 	manifest {
 		attributes(["Specification-Title": project.name,
 					"Specification-Vendor": project.author,
