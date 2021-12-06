@@ -1,7 +1,6 @@
 buildscript {
 	repositories {
 		maven { url = 'https://maven.minecraftforge.net' }
-		jcenter()
 		mavenCentral()
 	}
 	dependencies {
@@ -11,9 +10,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-archivesBaseName = name + '-' + project.mcVersion
+archivesBaseName = project.name + '-' + project.mcVersion
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
 	mappings channel: 'official', version: project.mcVersion
@@ -36,7 +35,6 @@ repositories {
 	}
 }
 
-
 sourceSets {
 	main {
 		resources {
@@ -47,9 +45,9 @@ sourceSets {
 
 dependencies {
 	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
-	compileOnly 'curse.maven:iceberg-520110:3491123'
-	runtimeOnly 'curse.maven:iceberg-520110:3491123'
-	implementation fg.deobf('curse.maven:jade-324717:3400050')
+
+	implementation fg.deobf('curse.maven:iceberg-520110:3549885')
+	implementation fg.deobf('curse.maven:jade-324717:3551337')
 }
 
 jar {
