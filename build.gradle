@@ -46,7 +46,7 @@ sourceSets {
 dependencies {
 	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
 
-	implementation fg.deobf('curse.maven:iceberg-520110:3549885')
+	implementation fg.deobf('curse.maven:iceberg-520110:3561115')
 	implementation fg.deobf('curse.maven:jade-324717:3551337')
 }
 
