@@ -47,8 +47,9 @@ sourceSets {
 
 dependencies {
 	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
-	compileOnly 'curse.maven:iceberg-520110:3491123'
-	runtimeOnly 'curse.maven:iceberg-520110:3491123'
+	implementation fg.deobf('curse.maven:iceberg-520110:3491123')
+	implementation fg.deobf('curse.maven:placebo-283644:3565371')
+	implementation fg.deobf('curse.maven:toastcontrol-271740:3556916')
 	implementation fg.deobf('curse.maven:jade-324717:3400050')
 }
 

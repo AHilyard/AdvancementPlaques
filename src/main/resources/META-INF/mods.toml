@@ -32,3 +32,10 @@ description="Replaces standard advancement toasts with fancy plaques."
 	versionRange="[1.0.13,)"
 	ordering="NONE"
 	side="BOTH"
+
+[[dependencies.advancementplaques]]
+	modId="toastcontrol"
+	mandatory=false
+	versionRange="[5.0,)"
+	ordering="NONE"
+	side="BOTH"
