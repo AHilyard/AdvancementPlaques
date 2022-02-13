@@ -29,7 +29,8 @@
 		"fabric": "*",
 		"minecraft": "1.18.x",
 		"java": ">=17",
-		"cloth-config2": ">=6.0"
+		"cloth-config2": ">=6.0",
+		"iceberg": ">=1.0.38"
 	},
 	"suggests": {
 		"waila": "*"
