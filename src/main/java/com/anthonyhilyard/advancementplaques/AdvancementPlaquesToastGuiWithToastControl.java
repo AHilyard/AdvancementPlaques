@@ -1,4 +1,4 @@
-package com.anthonyhilyard.advancementplaques;
+ package com.anthonyhilyard.advancementplaques;
 
 import java.util.Arrays;
 import java.util.Deque;
@@ -65,7 +65,9 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 			try
 			{
 				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
-				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && ModList.get().isLoaded("waila"))
+				boolean wailaLoaded = ModList.get().isLoaded("waila");
+				boolean jadeLoaded = ModList.get().isLoaded("jade");
+				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && (wailaLoaded || jadeLoaded))
 				{
 					boolean anyPlaques = false;
 					for (int i = 0; i < plaques.length; i++)
@@ -80,11 +82,25 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 
 					if (anyPlaques)
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("disableWaila").invoke(null);
+						if (wailaLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("disableWaila").invoke(null);
+						}
+						if (jadeLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.JadeHandler").getMethod("disableJade").invoke(null);
+						}
 					}
 					else
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("enableWaila").invoke(null);
+						if (wailaLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("enableWaila").invoke(null);
+						}
+						if (jadeLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.JadeHandler").getMethod("enableJade").invoke(null);
+						}
 					}
 				}
 			}

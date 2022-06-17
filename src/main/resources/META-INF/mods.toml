@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[39,)"
+loaderVersion="[41,)"
 license="MIT"
 
 [[mods]]
@@ -7,7 +7,7 @@ modId="advancementplaques"
 version="${file.jarVersion}"
 displayName="Advancement Plaques"
 displayURL="https://anthonyhilyard.com/"
-updateJSONURL="https://mc-curse-update-checker.herokuapp.com/499826"
+updateJSONURL="https://mc-update-check.anthonyhilyard.com/499826"
 logoFile="icon.png"
 authors="Grend"
 description="Replaces standard advancement toasts with fancy plaques."
@@ -15,21 +15,21 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="forge"
 	mandatory=true
-	versionRange="[39,)"
+	versionRange="[41,)"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="minecraft"
 	mandatory=true
-	versionRange="[1.18.1,1.19)"
+	versionRange="[1.19,)"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="iceberg"
 	mandatory=true
-	versionRange="[1.0.30,)"
+	versionRange="[1.0.44,)"
 	ordering="NONE"
 	side="BOTH"
 

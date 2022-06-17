@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -24,5 +25,6 @@ public class Loader
 			FMLJavaModLoadingContext.get().getModEventBus().addListener(mod::onClientSetup);
 			ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AdvancementPlaquesConfig.SPEC);
 		}
+		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "ANY", (remote, isServer) -> true));
 	}
 }
