@@ -46,17 +46,17 @@ sourceSets {
 dependencies {
 	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
 
-	implementation fg.deobf('curse.maven:iceberg-520110:3561115')
-	implementation fg.deobf('curse.maven:placebo-283644:3568836')
-	implementation fg.deobf('curse.maven:toastcontrol-271740:3566996')
-	implementation fg.deobf('curse.maven:jade-324717:3551337')
+	implementation fg.deobf('curse.maven:iceberg-520110:3675774')
+	implementation fg.deobf('curse.maven:placebo-283644:3781199')
+	implementation fg.deobf('curse.maven:toastcontrol-271740:3717855')
+	implementation fg.deobf('curse.maven:jade-324717:3761542')
 }
 
 jar {
 	manifest {
 		attributes(["Specification-Title": project.name,
 					"Specification-Vendor": project.author,
-					"Specification-Version": "24.0",
+					"Specification-Version": project.version,
 					"Implementation-Title": project.name,
 					"Implementation-Version": project.version,
 					"Implementation-Vendor" : project.author,
