@@ -77,19 +77,19 @@ public class AdvancementPlaque
 			{
 				default:
 				case TASK:
-					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.taskEffectFadeInTime * 1000.0);
-					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.taskEffectFadeOutTime * 1000.0);
-					duration = (float)(AdvancementPlaquesConfig.INSTANCE.taskDuration * 1000.0);
+					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.taskEffectFadeInTime.get() * 1000.0);
+					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.taskEffectFadeOutTime.get() * 1000.0);
+					duration = (float)(AdvancementPlaquesConfig.INSTANCE.taskDuration.get() * 1000.0);
 					break;
 				case GOAL:
-					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.goalEffectFadeInTime * 1000.0);
-					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.goalEffectFadeOutTime * 1000.0);
-					duration = (float)(AdvancementPlaquesConfig.INSTANCE.goalDuration * 1000.0);
+					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.goalEffectFadeInTime.get() * 1000.0);
+					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.goalEffectFadeOutTime.get() * 1000.0);
+					duration = (float)(AdvancementPlaquesConfig.INSTANCE.goalDuration.get() * 1000.0);
 					break;
 				case CHALLENGE:
-					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.challengeEffectFadeInTime * 1000.0);
-					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.challengeEffectFadeOutTime * 1000.0);
-					duration = (float)(AdvancementPlaquesConfig.INSTANCE.challengeDuration * 1000.0);
+					fadeInTime = (float)(AdvancementPlaquesConfig.INSTANCE.challengeEffectFadeInTime.get() * 1000.0);
+					fadeOutTime = (float)(AdvancementPlaquesConfig.INSTANCE.challengeEffectFadeOutTime.get() * 1000.0);
+					duration = (float)(AdvancementPlaquesConfig.INSTANCE.challengeDuration.get() * 1000.0);
 					break;
 			}
 
@@ -107,12 +107,12 @@ public class AdvancementPlaque
 				}
 
 				// Grab the title color and apply the current alpha to it.
-				int tempColor = (int)AdvancementPlaquesConfig.INSTANCE.titleColor;
+				int tempColor = (int)AdvancementPlaquesConfig.INSTANCE.titleColor.get().longValue();
 				int tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
 				int titleColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
 
 				// Grab the name color and apply the current alpha to it.
-				tempColor = (int)AdvancementPlaquesConfig.INSTANCE.nameColor;
+				tempColor = (int)AdvancementPlaquesConfig.INSTANCE.nameColor.get().longValue();
 				tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
 				int nameColor = (tempColor & 0xFFFFFF) | (tempAlpha << 24);
 
@@ -189,20 +189,20 @@ public class AdvancementPlaque
 						switch (displayInfo.getFrame())
 						{
 							case TASK:
-								if (!AdvancementPlaquesConfig.INSTANCE.muteTasks)
+								if (!AdvancementPlaquesConfig.INSTANCE.muteTasks.get())
 								{
 									mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.TASK_COMPLETE, 1.0f, 1.0f));
 								}
 								break;
 							case GOAL:
-								if (!AdvancementPlaquesConfig.INSTANCE.muteGoals)
+								if (!AdvancementPlaquesConfig.INSTANCE.muteGoals.get())
 								{
 									mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.GOAL_COMPLETE, 1.0f, 1.0f));
 								}
 								break;
 							default:
 							case CHALLENGE:
-								if (!AdvancementPlaquesConfig.INSTANCE.muteChallenges)
+								if (!AdvancementPlaquesConfig.INSTANCE.muteChallenges.get())
 								{
 									mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f));
 								}
@@ -267,16 +267,16 @@ public class AdvancementPlaque
 		PoseStack modelViewStack = RenderSystem.getModelViewStack();
 		modelViewStack.pushPose();
 
-		if (AdvancementPlaquesConfig.INSTANCE.onTop)
+		if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset,
-									 AdvancementPlaquesConfig.INSTANCE.distance,
+			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset.get(),
+									 AdvancementPlaquesConfig.INSTANCE.distance.get(),
 									 900.0f + index);
 		}
 		else
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset,
-									 (float)(mc.getWindow().getGuiScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance)),
+			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset.get(),
+									 (float)(mc.getWindow().getGuiScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
 									 900.0f + index);
 		}
 

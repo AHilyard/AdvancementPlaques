@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'fabric-loom' version '0.12-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -15,22 +15,15 @@ repositories {
 	maven {
 		name = "CurseMaven"
 		url = "https://www.cursemaven.com"
+		content { includeGroup "curse.maven" }
 	}
 	maven {
-		name = "Cloth API"
-		url = "https://maven.shedaniel.me/"
+		name = "Fuzs Mod Resources"
+		url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
 	}
-	maven { 
+	maven {
 		name = "WTHIT"
-		url "https://maven.bai.lol" 
-	}
-}
-
-sourceSets {
-	main {
-		resources {
-			srcDir 'src/generated/resources'
-		}
+		url = "https://maven.bai.lol"
 	}
 }
 
@@ -39,10 +32,12 @@ dependencies {
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loaderVersion}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricVersion}"
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.clothVersion}") { exclude(group: "net.fabricmc.fabric-api") }
 
-	modImplementation "curse.maven:iceberg-539382:3535221"
-	modCompileOnly "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
+	modImplementation "net.minecraftforge:forgeconfigapiport-fabric:${forgeConfigApiVersion}"
+	modImplementation "curse.maven:iceberg-539382:3832794"
+
+	modImplementation "curse.maven:jade-324717:3836188"
+	modImplementation "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
 }
 
 loom {
@@ -68,12 +63,12 @@ java {
 
 jar {
 	manifest {
-		attributes(["Specification-Title": project.name,
-					"Specification-Vendor": project.author,
-					"Specification-Version": "24.0",
-					"Implementation-Title": project.name,
-					"Implementation-Version": project.version,
-					"Implementation-Vendor" : project.author,
+		attributes(["Specification-Title":		project.name,
+					"Specification-Vendor":		project.author,
+					"Specification-Version":	project.version,
+					"Implementation-Title":		project.name,
+					"Implementation-Version":	project.version,
+					"Implementation-Vendor" :	project.author,
 					"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
 	}
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.4.5
+- Added support for recent versions of Jade and WTHIT. (Fabric Only)
+- Updated configuration system to use Forge Config API Port for consistency with Forge version. (Fabric Only)
+- Initial release for Fabric 1.19.
+
 ### 1.4.4
 - Added a missing Iceberg dependency in Fabric version.
 

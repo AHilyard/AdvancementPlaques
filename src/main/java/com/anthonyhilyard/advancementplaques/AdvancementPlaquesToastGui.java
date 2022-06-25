@@ -42,10 +42,10 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 		{
 			AdvancementToast advancementToast = (AdvancementToast)toastIn;
 			DisplayInfo displayInfo = advancementToast.advancement.getDisplay();
-			if ((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks) ||
-				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals) ||
-				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges) ||
-				AdvancementPlaquesConfig.INSTANCE.whitelist.contains(advancementToast.advancement.getId().toString()))
+			if ((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
+				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
+				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
+				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
 			{
 				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
 				advancementToastsQueue.add((AdvancementToast)toastIn);
@@ -67,7 +67,9 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 			try
 			{
 				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
-				if (AdvancementPlaquesConfig.INSTANCE.hideWaila && FabricLoader.getInstance().isModLoaded("waila"))
+				boolean wailaLoaded = FabricLoader.getInstance().isModLoaded("waila");
+				boolean jadeLoaded = FabricLoader.getInstance().isModLoaded("jade");
+				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && (wailaLoaded || jadeLoaded))
 				{
 					boolean anyPlaques = false;
 					for (int i = 0; i < plaques.length; i++)
@@ -79,14 +81,27 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 						}
 					}
 
-
 					if (anyPlaques)
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("disableWaila").invoke(null);
+						if (wailaLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("disableWaila").invoke(null);
+						}
+						if (jadeLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.JadeHandler").getMethod("disableJade").invoke(null);
+						}
 					}
 					else
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("enableWaila").invoke(null);
+						if (wailaLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("enableWaila").invoke(null);
+						}
+						if (jadeLoaded)
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.JadeHandler").getMethod("enableJade").invoke(null);
+						}
 					}
 				}
 			}
