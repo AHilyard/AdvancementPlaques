@@ -244,13 +244,13 @@ public class AdvancementPlaque
 
 		if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
+			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset.get(),
 									 AdvancementPlaquesConfig.INSTANCE.distance.get(),
 									 900.0f + index);
 		}
 		else
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
+			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset.get(),
 									 (float)(mc.getWindow().getGuiScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
 									 900.0f + index);
 		}

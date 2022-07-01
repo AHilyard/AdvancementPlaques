@@ -1,6 +1,6 @@
 modLoader="javafml"
-loaderVersion="[39,)"
-license="MIT"
+loaderVersion="[40,)"
+license="CC BY-NC-ND 4.0"
 
 [[mods]]
 modId="advancementplaques"
@@ -15,7 +15,7 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="forge"
 	mandatory=true
-	versionRange="[39,)"
+	versionRange="[40,)"
 	ordering="NONE"
 	side="BOTH"
 
@@ -29,7 +29,7 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="iceberg"
 	mandatory=true
-	versionRange="[1.0.30,)"
+	versionRange="[1.0.44,)"
 	ordering="NONE"
 	side="BOTH"
 

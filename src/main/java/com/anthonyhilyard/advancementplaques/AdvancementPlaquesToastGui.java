@@ -7,6 +7,7 @@ import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -82,17 +83,17 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 
 					if (anyPlaques)
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("disableWaila").invoke(null);
+						Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("disableWaila").invoke(null);
 					}
 					else
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("enableWaila").invoke(null);
+						Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("enableWaila").invoke(null);
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				LOGGER.error(e);
+				LOGGER.error(ExceptionUtils.getStackTrace(e));
 			}
 
 			// Do plaques.

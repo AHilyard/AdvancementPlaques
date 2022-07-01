@@ -59,7 +59,7 @@ public class AdvancementPlaques
 					}
 					else
 					{
-						LOGGER.debug("something went wrong");
+						LOGGER.debug("Unable to update Toast GUI, Advancement Plaques will not function properly. Maybe another mod is interfering?");
 					}
 				}
 				catch (Exception e)

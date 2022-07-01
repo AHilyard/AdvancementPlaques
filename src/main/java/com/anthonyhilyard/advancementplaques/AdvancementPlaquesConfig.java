@@ -30,6 +30,7 @@ public class AdvancementPlaquesConfig
 
 	public final BooleanValue onTop;
 	public final IntValue distance;
+	public final IntValue horizontalOffset;
 	public final BooleanValue hideWaila;
 
 	public final BooleanValue tasks;
@@ -62,7 +63,8 @@ public class AdvancementPlaquesConfig
 
 		onTop = build.comment(" If plaques should show on the top of the screen.").define("on_top", true);
 		distance = build.comment(" The distance from the top or bottom of the screen, in pixels.").defineInRange("distance", 16, 8, 256);
-		hideWaila = build.comment(" Hide waila/hwyla/jade popups while plaques are showing.").define("hide_waila", false);
+		horizontalOffset = build.comment(" The horizontal offset from the center, in pixels.").defineInRange("horizontal_offset", 0, -256, 256);
+		hideWaila = build.comment(" Hide waila/hwyla/jade/wthit popups while plaques are showing.").define("hide_waila", false);
 
 		tasks = build.comment(" If plaques should show for task advancements (normal advancements).").define("tasks", true);
 		goals = build.comment(" If plaques should show for goal advancements (medium-difficulty advancements).").define("goals", true);
