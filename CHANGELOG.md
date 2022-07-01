@@ -1,5 +1,8 @@
 # Changelog
 
+### 1.4.5
+- Fixed support for Jade/WTHIT.
+
 ### 1.4.4
 - Added a missing Iceberg dependency in Fabric version.
 

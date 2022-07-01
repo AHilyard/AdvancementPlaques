@@ -10,7 +10,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-
 @Config(name = "advancementplaques")
 public class AdvancementPlaquesConfig implements ConfigData
 {
@@ -29,7 +28,7 @@ public class AdvancementPlaquesConfig implements ConfigData
 	public int distance = 16;
 	@Comment("The horizontal offset from the center, in pixels.")
 	public int horizontalOffset = 0;
-	@Comment("Hide waila/hwyla/jade popups while plaques are showing.")
+	@Comment("Hide waila/hwyla/jade/wthit popups while plaques are showing.")
 	public boolean hideWaila = false;
 
 	@Comment("If plaques should show for task advancements (normal advancements).")
