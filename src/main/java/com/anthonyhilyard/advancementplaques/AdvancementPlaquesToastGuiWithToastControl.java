@@ -80,11 +80,11 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 
 					if (anyPlaques)
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("disableWaila").invoke(null);
+						Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("disableWaila").invoke(null);
 					}
 					else
 					{
-						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("enableWaila").invoke(null);
+						Class.forName("com.anthonyhilyard.advancementplaques.compat.WailaHandler").getMethod("enableWaila").invoke(null);
 					}
 				}
 			}
