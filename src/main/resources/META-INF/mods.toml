@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[41,)"
-license="MIT"
+license="CC BY-NC-ND 4.0"
 
 [[mods]]
 modId="advancementplaques"
