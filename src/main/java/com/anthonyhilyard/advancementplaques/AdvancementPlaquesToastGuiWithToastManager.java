@@ -7,24 +7,27 @@ import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import dev.banzetta.toastmanager.ManagedToastComponent;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.fabricmc.loader.api.FabricLoader;
 
-public class AdvancementPlaquesToastGui extends ToastComponent
+public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComponent
 {
 	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 
-	public AdvancementPlaquesToastGui(Minecraft mcIn)
+	public AdvancementPlaquesToastGuiWithToastManager(Minecraft mcIn)
 	{
-		super(mcIn);
+		super();
 		mc = mcIn;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer, mc);
 	}
@@ -101,7 +104,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 			}
 			catch (Exception e)
 			{
-				Loader.LOGGER.error(e);
+				Loader.LOGGER.error(ExceptionUtils.getStackTrace(e));
 			}
 
 			// Do plaques.

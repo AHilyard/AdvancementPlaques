@@ -1,5 +1,8 @@
 # Changelog
 
+### 1.4.6
+- Added support for Toast Manager.
+
 ### 1.4.5
 - Fixed support for Jade/WTHIT.
 

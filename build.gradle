@@ -35,6 +35,7 @@ dependencies {
 
 	modImplementation "curse.maven:iceberg-539382:3675784"
 	modImplementation "curse.maven:jade-324717:3827468"
+	modImplementation "curse.maven:toastmanager-662724:3946327"
 	modCompileOnly "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
 }
 

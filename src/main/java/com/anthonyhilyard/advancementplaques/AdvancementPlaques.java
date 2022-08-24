@@ -1,9 +1,13 @@
 package com.anthonyhilyard.advancementplaques;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +30,34 @@ public class AdvancementPlaques
 		AdvancementPlaquesConfig.init();
 
 		ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
-			client.toast = new AdvancementPlaquesToastGui(client);
+
+			try
+			{
+				final ToastComponent newToastComponent;
+
+				// Check if Toast Manager is loaded.
+				if (FabricLoader.getInstance().isModLoaded("toastmanager"))
+				{
+					newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.AdvancementPlaquesToastGuiWithToastManager").getConstructor(Minecraft.class).newInstance(client);
+				}
+				else
+				{
+					newToastComponent = new AdvancementPlaquesToastGui(client);
+				}
+
+				if (newToastComponent != null)
+				{
+					client.toast = newToastComponent;
+				}
+				else
+				{
+					LOGGER.debug("Unable to update Toast GUI, Advancement Plaques will not function properly. Maybe another mod is interfering?");
+				}
+			}
+			catch (Exception e)
+			{
+				LOGGER.error(ExceptionUtils.getStackTrace(e));
+			}
 		});
 	}
 }
