@@ -35,8 +35,9 @@ dependencies {
 
 	modImplementation "net.minecraftforge:forgeconfigapiport-fabric:${forgeConfigApiVersion}"
 	modImplementation "curse.maven:iceberg-539382:3832794"
-
 	modImplementation "curse.maven:jade-324717:3836188"
+	//modImplementation "curse.maven:toastmanager-662724:3946547"
+	modImplementation files("lib/ToastManager-1.19.2-1.0.0.jar")
 	modImplementation "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
 }
 

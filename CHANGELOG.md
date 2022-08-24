@@ -1,5 +1,8 @@
 # Changelog
 
+### 1.4.6
+- Added support for Toast Manager.
+
 ### 1.4.5
 - Added support for recent versions of Jade and WTHIT. (Fabric Only)
 - Updated configuration system to use Forge Config API Port for consistency with Forge version. (Fabric Only)
