@@ -35,6 +35,9 @@ repositories {
 		name = "CurseMaven"
 		url "https://www.cursemaven.com"
 	}
+	maven { // The One Probe
+		url "https://maven.k-4u.nl/"
+	}
 }
 
 // Process resources on build
@@ -71,6 +74,10 @@ dependencies {
 	implementation fg.deobf('curse.maven:placebo-283644:3437009')
 	implementation fg.deobf('curse.maven:toastcontrol-271740:3172881')
 	implementation fg.deobf('curse.maven:jade-324717:3302544')
+	implementation fg.deobf(project.dependencies.create("mcjty.theoneprobe:theoneprobe:1.16-3.1.7-4") {
+		transitive = false
+	})
+
 }
 
 jar {
