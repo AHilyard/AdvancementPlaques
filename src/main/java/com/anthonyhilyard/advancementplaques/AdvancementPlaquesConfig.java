@@ -62,7 +62,7 @@ public class AdvancementPlaquesConfig
 
 		onTop = build.comment(" If plaques should show on the top of the screen.").define("on_top", true);
 		distance = build.comment(" The distance from the top or bottom of the screen, in pixels.").defineInRange("distance", 16, 8, 256);
-		hideWaila = build.comment(" Hide waila/hwyla/jade popups while plaques are showing.").define("hide_waila", false);
+		hideWaila = build.comment(" Hide waila/hwyla/jade/theoneprobe popups while plaques are showing.").define("hide_waila", false);
 
 		tasks = build.comment(" If plaques should show for task advancements (normal advancements).").define("tasks", true);
 		goals = build.comment(" If plaques should show for goal advancements (medium-difficulty advancements).").define("goals", true);

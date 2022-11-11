@@ -1,5 +1,6 @@
 package com.anthonyhilyard.advancementplaques;
 
+import mcjty.theoneprobe.config.Config;
 import mcp.mobius.waila.Waila;
 
 public class WailaHandler
@@ -26,5 +27,23 @@ public class WailaHandler
 			disabled = false;
 		}
 	}
-	
+
+	public static void disableTOP()
+	{
+		boolean currentState = Config.isVisible.get();
+		if (!disabled || currentState)
+		{
+			previousState = currentState;
+			Config.setVisible(false);
+			disabled = true;
+		}
+	}
+	public static void enableTOP()
+	{
+		if (disabled)
+		{
+			Config.setVisible(previousState);
+			disabled = false;
+		}
+	}
 }

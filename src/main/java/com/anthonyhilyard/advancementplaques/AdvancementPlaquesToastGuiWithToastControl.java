@@ -93,7 +93,36 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 			{
 				LOGGER.error(e);
 			}
+			try
+			{
+				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
+				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && ModList.get().isLoaded("theoneprobe"))
+				{
+					boolean anyPlaques = false;
+					for (int i = 0; i < plaques.length; i++)
+					{
+						if (plaques[i] != null)
+						{
+							anyPlaques = true;
+							break;
+						}
+					}
 
+
+					if (anyPlaques)
+					{
+						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("disableTOP").invoke(null);
+					}
+					else
+					{
+						Class.forName("com.anthonyhilyard.advancementplaques.WailaHandler").getMethod("enableTOP").invoke(null);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				LOGGER.error(e);
+			}
 			// Do plaques.
 			for (int i = 0; i < plaques.length; ++i)
 			{
