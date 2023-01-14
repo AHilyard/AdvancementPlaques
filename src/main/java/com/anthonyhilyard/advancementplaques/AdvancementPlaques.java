@@ -16,18 +16,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGui;
+
 @Mod.EventBusSubscriber(modid = Loader.MODID, bus = Bus.MOD)
 public class AdvancementPlaques
 {
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LogManager.getLogger();
+	public static final Logger LOGGER = LogManager.getLogger(Loader.MODID);
 
 	public static final ResourceLocation TEXTURE_PLAQUES = new ResourceLocation(Loader.MODID, "textures/gui/plaques.png");
 	public static final ResourceLocation TEXTURE_PLAQUE_EFFECTS = new ResourceLocation(Loader.MODID, "textures/gui/plaqueeffect.png");
 
 	private static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Loader.MODID);
-	public static final RegistryObject<SoundEvent> TASK_COMPLETE = SOUND_EVENTS.register("ui.toast.task_complete", () -> new SoundEvent(new ResourceLocation(Loader.MODID, "ui.toast.task_complete")));
-	public static final RegistryObject<SoundEvent> GOAL_COMPLETE = SOUND_EVENTS.register("ui.toast.goal_complete", () -> new SoundEvent(new ResourceLocation(Loader.MODID, "ui.toast.goal_complete")));
+	public static final RegistryObject<SoundEvent> TASK_COMPLETE = SOUND_EVENTS.register("ui.toast.task_complete", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Loader.MODID, "ui.toast.task_complete")));
+	public static final RegistryObject<SoundEvent> GOAL_COMPLETE = SOUND_EVENTS.register("ui.toast.goal_complete", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Loader.MODID, "ui.toast.goal_complete")));
 
 	public AdvancementPlaques()
 	{

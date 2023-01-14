@@ -1,41 +1,38 @@
-package com.anthonyhilyard.advancementplaques;
+ package com.anthonyhilyard.advancementplaques.ui;
 
 import java.util.Arrays;
 import java.util.Deque;
 
+import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
+import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraftforge.fml.ModList;
 
-public class AdvancementPlaquesToastGui extends ToastComponent
+public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.BetterToastComponent
 {
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LogManager.getLogger();
-
-	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
+	private final AdvancementPlaque[] plaques = new AdvancementPlaque[3];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 
-	public AdvancementPlaquesToastGui(Minecraft mcIn)
+	public AdvancementPlaquesToastGuiWithToastControl(Minecraft mcIn)
 	{
-		super(mcIn);
+		super();
 		mc = mcIn;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors(), mc.getItemRenderer().getBlockEntityRenderer(), mc);
 	}
 
 	@Override
+	@SuppressWarnings("null")
 	public void addToast(Toast toastIn)
 	{
 		if (toastIn instanceof AdvancementToast)
@@ -61,11 +58,11 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 	{
 		if (!mc.options.hideGui)
 		{
-			// Do toasts.
-			super.render(stack);
-
 			try
 			{
+				// Do toasts.
+				super.render(stack);
+
 				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
 				boolean wailaLoaded = ModList.get().isLoaded("waila");
 				boolean jadeLoaded = ModList.get().isLoaded("jade");
@@ -80,7 +77,6 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 							break;
 						}
 					}
-
 
 					if (anyPlaques)
 					{
@@ -105,26 +101,26 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 						}
 					}
 				}
+
+				// Do plaques.
+				for (int i = 0; i < plaques.length; ++i)
+				{
+					AdvancementPlaque toastinstance = plaques[i];
+
+					if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
+					{
+						plaques[i] = null;
+					}
+
+					if (plaques[i] == null && !advancementToastsQueue.isEmpty())
+					{
+						plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
+					}
+				}
 			}
 			catch (Exception e)
 			{
-				LOGGER.error(e);
-			}
-
-			// Do plaques.
-			for (int i = 0; i < plaques.length; ++i)
-			{
-				AdvancementPlaque toastinstance = plaques[i];
-
-				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
-				{
-					plaques[i] = null;
-				}
-
-				if (plaques[i] == null && !advancementToastsQueue.isEmpty())
-				{
-					plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
-				}
+				AdvancementPlaques.LOGGER.error(e);
 			}
 		}
 	}

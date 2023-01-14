@@ -1,39 +1,39 @@
- package com.anthonyhilyard.advancementplaques;
+package com.anthonyhilyard.advancementplaques.ui;
 
 import java.util.Arrays;
 import java.util.Deque;
 
+import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
+import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraftforge.fml.ModList;
 
-public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.BetterToastComponent
+public class AdvancementPlaquesToastGui extends ToastComponent
 {
-	private static final Logger LOGGER = LogManager.getLogger();
-
-	private final AdvancementPlaque[] plaques = new AdvancementPlaque[3];
+	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 
-	public AdvancementPlaquesToastGuiWithToastControl(Minecraft mcIn)
+	public AdvancementPlaquesToastGui(Minecraft mcIn)
 	{
-		super();
+		super(mcIn);
 		mc = mcIn;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors(), mc.getItemRenderer().getBlockEntityRenderer(), mc);
 	}
 
 	@Override
+	@SuppressWarnings("null")
 	public void addToast(Toast toastIn)
 	{
 		if (toastIn instanceof AdvancementToast)
@@ -106,7 +106,7 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 			}
 			catch (Exception e)
 			{
-				LOGGER.error(e);
+				AdvancementPlaques.LOGGER.error(e);
 			}
 
 			// Do plaques.

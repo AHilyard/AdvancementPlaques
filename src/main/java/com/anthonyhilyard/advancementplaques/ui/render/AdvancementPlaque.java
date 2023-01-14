@@ -1,5 +1,8 @@
-package com.anthonyhilyard.advancementplaques;
+package com.anthonyhilyard.advancementplaques.ui.render;
 
+import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
+import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGui;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -185,7 +188,7 @@ public class AdvancementPlaque
 					}
 					catch (NullPointerException e)
 					{
-						Loader.LOGGER.warn("Tried to play a custom sound for an advancement, but that sound was not registered! Install Advancement Plaques on the server or mute tasks and goals in the config file.");
+						AdvancementPlaques.LOGGER.warn("Tried to play a custom sound for an advancement, but that sound was not registered! Install Advancement Plaques on the server or mute tasks and goals in the config file.");
 					}
 				}
 			}

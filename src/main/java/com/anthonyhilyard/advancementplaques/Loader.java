@@ -1,8 +1,5 @@
 package com.anthonyhilyard.advancementplaques;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.IExtensionPoint;
@@ -15,7 +12,6 @@ import net.minecraftforge.fml.config.ModConfig;
 public class Loader
 {
 	public static final String MODID = "advancementplaques";
-	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	public Loader()
 	{

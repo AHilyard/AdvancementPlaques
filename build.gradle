@@ -39,7 +39,7 @@ repositories {
 dependencies {
 	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
 
-	implementation fg.deobf('curse.maven:iceberg-520110:3832980')
+	implementation fg.deobf('curse.maven:iceberg-520110:4257665')
 
 	implementation fg.deobf('curse.maven:placebo-283644:3781199')
 	implementation fg.deobf('curse.maven:toastcontrol-271740:3717855')
