@@ -1,5 +1,12 @@
 # Changelog
 
+### 1.4.8
+- Fixed an intermittent crash with some modded advancements.
+- First Minecraft 1.19.3 release.
+
+### 1.4.7
+- Fixed incompatible mod resources.
+
 ### 1.4.6
 - Added support for Toast Manager.
 

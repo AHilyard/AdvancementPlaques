@@ -1,30 +1,36 @@
-package com.anthonyhilyard.advancementplaques;
+package com.anthonyhilyard.advancementplaques.ui;
 
 import java.util.Arrays;
 import java.util.Deque;
 
+import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
+import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import dev.banzetta.toastmanager.ManagedToastComponent;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.fabricmc.loader.api.FabricLoader;
 
-public class AdvancementPlaquesToastGui extends ToastComponent
+public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComponent
 {
-	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
+	private final AdvancementPlaque[] plaques = new AdvancementPlaque[3];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 
-	public AdvancementPlaquesToastGui(Minecraft mcIn)
+	public AdvancementPlaquesToastGuiWithToastManager(Minecraft mcIn)
 	{
-		super(mcIn);
+		super();
 		mc = mcIn;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer, mc);
 	}
@@ -55,12 +61,12 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 	{
 		if (!mc.options.hideGui)
 		{
-			// Do toasts.
-			super.render(stack);
-
 			try
 			{
-				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
+				// Do toasts.
+				super.render(stack);
+
+				// If Waila/Hwyla/Jade/WTHIT is installed, turn it off while the plaque is drawing if configured to do so.
 				boolean wailaLoaded = FabricLoader.getInstance().isModLoaded("waila");
 				boolean jadeLoaded = FabricLoader.getInstance().isModLoaded("jade");
 				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && (wailaLoaded || jadeLoaded))
@@ -98,26 +104,26 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 						}
 					}
 				}
+
+				// Do plaques.
+				for (int i = 0; i < plaques.length; ++i)
+				{
+					AdvancementPlaque toastinstance = plaques[i];
+
+					if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
+					{
+						plaques[i] = null;
+					}
+
+					if (plaques[i] == null && !advancementToastsQueue.isEmpty())
+					{
+						plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
+					}
+				}
 			}
 			catch (Exception e)
 			{
-				Loader.LOGGER.error(e);
-			}
-
-			// Do plaques.
-			for (int i = 0; i < plaques.length; ++i)
-			{
-				AdvancementPlaque toastinstance = plaques[i];
-
-				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
-				{
-					plaques[i] = null;
-				}
-
-				if (plaques[i] == null && !advancementToastsQueue.isEmpty())
-				{
-					plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
-				}
+				AdvancementPlaques.LOGGER.error(ExceptionUtils.getStackTrace(e));
 			}
 		}
 	}
