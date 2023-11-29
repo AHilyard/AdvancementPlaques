@@ -8,11 +8,11 @@ import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
@@ -55,12 +55,12 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 	}
 
 	@Override
-	public void render(PoseStack stack)
+	public void render(GuiGraphics graphics)
 	{
 		if (!mc.options.hideGui)
 		{
 			// Do toasts.
-			super.render(stack);
+			super.render(graphics);
 
 			try
 			{
@@ -114,7 +114,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 			{
 				AdvancementPlaque toastinstance = plaques[i];
 
-				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
+				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, graphics))
 				{
 					plaques[i] = null;
 				}

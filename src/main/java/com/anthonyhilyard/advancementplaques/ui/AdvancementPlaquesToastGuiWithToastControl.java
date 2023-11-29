@@ -8,11 +8,11 @@ import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraftforge.fml.ModList;
@@ -54,14 +54,14 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 	}
 
 	@Override
-	public void render(PoseStack stack)
+	public void render(GuiGraphics graphics)
 	{
 		if (!mc.options.hideGui)
 		{
 			try
 			{
 				// Do toasts.
-				super.render(stack);
+				super.render(graphics);
 
 				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
 				boolean wailaLoaded = ModList.get().isLoaded("waila");
@@ -107,7 +107,7 @@ public class AdvancementPlaquesToastGuiWithToastControl extends shadows.toaster.
 				{
 					AdvancementPlaque toastinstance = plaques[i];
 
-					if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
+					if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, graphics))
 					{
 						plaques[i] = null;
 					}

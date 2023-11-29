@@ -2,8 +2,8 @@ package com.anthonyhilyard.advancementplaques.ui.render;
 
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
-import com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGui;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
+import com.anthonyhilyard.iceberg.util.GuiHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -12,8 +12,11 @@ import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast.Visibility;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.locale.Language;
@@ -58,9 +61,17 @@ public class AdvancementPlaque
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
 
-	private Visibility drawPlaque(PoseStack poseStack, long displayTime)
+	private Visibility drawPlaque(GuiGraphics graphics, long displayTime)
 	{
+		// Don't show plaques while paused or loading.
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.screen instanceof PauseScreen || mc.screen instanceof LevelLoadingScreen)
+		{
+			return Visibility.SHOW;
+		}
+
 		DisplayInfo displayInfo = toast.advancement.getDisplay();
+		PoseStack poseStack = graphics.pose();
 
 		if (displayInfo != null)
 		{
@@ -116,45 +127,40 @@ public class AdvancementPlaque
 				{
 					frameOffset = 2;
 				}
-				AdvancementPlaquesToastGui.blit(poseStack, -1, -1, 0, height() * frameOffset, width(), height(), 256, 256);
+
+				GuiHelper.blit(graphics.pose(), -1, -1, width(), height(), 0, height() * frameOffset, width(), height(), 256, 256);
 
 				// Only bother drawing text if alpha is greater than 0.1.
 				if (alpha > 0.1f)
 				{
 					// Text like "Challenge Complete!" at the top of the plaque.
 					int typeWidth = mc.font.width(displayInfo.getFrame().getDisplayName());
-					mc.font.draw(poseStack, displayInfo.getFrame().getDisplayName(), (width() - typeWidth) / 2.0f + 15.0f, 5.0f, titleColor);
+					graphics.drawString(mc.font, displayInfo.getFrame().getDisplayName(), (int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false);
 
 					int titleWidth = mc.font.width(displayInfo.getTitle());
 
 					// If the width of the advancement title is less than the full available width, display it normally.
 					if (titleWidth <= (220 / 1.5f))
 					{
-						PoseStack modelViewStack = RenderSystem.getModelViewStack();
-						modelViewStack.pushPose();
-						modelViewStack.scale(1.5f, 1.5f, 1.0f);
-						RenderSystem.applyModelViewMatrix();
-						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), ((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f), 9.0f, nameColor);
-						modelViewStack.popPose();
-						RenderSystem.applyModelViewMatrix();
+						poseStack.pushPose();
+						poseStack.scale(1.5f, 1.5f, 1.0f);
+						graphics.drawString(mc.font, Language.getInstance().getVisualOrder(displayInfo.getTitle()), (int)(((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f)), 9, nameColor, false);
+						poseStack.popPose();
 					}
 					// Otherwise, display it with a smaller (default) font.
 					else
 					{
-						mc.font.draw(poseStack, Language.getInstance().getVisualOrder(displayInfo.getTitle()), (width() - titleWidth) / 2.0f + 15.0f, 15.0f, nameColor);
+						graphics.drawString(mc.font, Language.getInstance().getVisualOrder(displayInfo.getTitle()), (int)((width() - titleWidth) / 2.0f + 15.0f), 15, nameColor, false);
 					}
 				}
 
-				PoseStack modelViewStack = RenderSystem.getModelViewStack();
-				modelViewStack.pushPose();
-				modelViewStack.translate(1.0f, 1.0f, 0.0f);
-				modelViewStack.scale(1.5f, 1.5f, 1.0f);
+				poseStack.pushPose();
+				poseStack.translate(1.0f, 1.0f, 0.0f);
+				poseStack.scale(1.5f, 1.5f, 1.0f);
 
-				RenderSystem.applyModelViewMatrix();
-				itemRenderer.renderItemModelIntoGUIWithAlpha(displayInfo.getIcon(), 1, 1, alpha);
-				
-				modelViewStack.popPose();
-				RenderSystem.applyModelViewMatrix();
+				itemRenderer.renderItemModelIntoGUIWithAlpha(poseStack, displayInfo.getIcon(), 1, 1, alpha);
+
+				poseStack.popPose();
 
 				if (!hasPlayedSound)
 				{
@@ -210,13 +216,14 @@ public class AdvancementPlaque
 
 				if (displayInfo.getFrame() == FrameType.CHALLENGE)
 				{
-					AdvancementPlaquesToastGui.blit(poseStack, -16, -16, 0, height() + 32, width() + 32, height() + 32, 512, 512);
+					GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, height() + 32, width() + 32, height() + 32, 512, 512);
 				}
 				else
 				{
-					AdvancementPlaquesToastGui.blit(poseStack, -16, -16, 0, 0, width() + 32, height() + 32, 512, 512);
+					GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, 0, width() + 32, height() + 32, 512, 512);
 				}
 				poseStack.popPose();
+				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 			}
 
 			return displayTime >= fadeInTime + fadeOutTime + duration ? Visibility.HIDE : Visibility.SHOW;
@@ -227,7 +234,7 @@ public class AdvancementPlaque
 		}
 	}
 
-	public boolean render(int screenWidth, int index, PoseStack poseStack)
+	public boolean render(int screenWidth, int index, GuiGraphics graphics)
 	{
 		long currentTime = Util.getMillis();
 		if (animationTime == -1L)
@@ -242,26 +249,24 @@ public class AdvancementPlaque
 		}
 		
 		RenderSystem.disableDepthTest();
-		PoseStack modelViewStack = RenderSystem.getModelViewStack();
-		modelViewStack.pushPose();
+		PoseStack poseStack = graphics.pose();
+		poseStack.pushPose();
 
 		if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
+			poseStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
 									 AdvancementPlaquesConfig.INSTANCE.distance.get(),
-									 900.0f + index);
+									 800.0f + index);
 		}
 		else
 		{
-			modelViewStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
+			poseStack.translate((float)(mc.getWindow().getGuiScaledWidth() - width()) / 2.0f,
 									 (float)(mc.getWindow().getGuiScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
-									 900.0f + index);
+									 800.0f + index);
 		}
-		RenderSystem.applyModelViewMatrix();
-		Visibility newVisibility = drawPlaque(poseStack, currentTime - visibleTime);
+		Visibility newVisibility = drawPlaque(graphics, currentTime - visibleTime);
 
-		modelViewStack.popPose();
-		RenderSystem.applyModelViewMatrix();
+		poseStack.popPose();
 		RenderSystem.enableDepthTest();
 
 		if (newVisibility != visibility)

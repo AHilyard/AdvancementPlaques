@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-archivesBaseName = project.name + '-' + project.mcVersion
+archivesBaseName = project.name + '-' + project.mcVersion + '-forge'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -39,7 +39,8 @@ repositories {
 dependencies {
 	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
 
-	implementation fg.deobf('curse.maven:iceberg-520110:4257665')
+	//implementation fg.deobf('curse.maven:iceberg-520110:4257665')
+	implementation fg.deobf(files('libs/Iceberg-1.20.1-forge-1.1.10.jar'))
 
 	implementation fg.deobf('curse.maven:placebo-283644:3781199')
 	implementation fg.deobf('curse.maven:toastcontrol-271740:3717855')
