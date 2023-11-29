@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Deque;
 
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
-import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
@@ -39,11 +39,12 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 		if (toastIn instanceof AdvancementToast)
 		{
 			AdvancementToast advancementToast = (AdvancementToast)toastIn;
-			DisplayInfo displayInfo = advancementToast.advancement.getDisplay();
-			if ((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
-				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
-				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
-				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
+			DisplayInfo displayInfo = advancementToast.advancement.value().display().get();
+			if (displayInfo != null &&
+				((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
+				 (displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
+				 (displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
+				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.id().toString())))
 			{
 				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
 				advancementToastsQueue.add((AdvancementToast)toastIn);
@@ -114,7 +115,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 			{
 				AdvancementPlaque toastinstance = plaques[i];
 
-				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, graphics))
+				if (toastinstance != null && toastinstance.render(graphics.guiWidth(), i, graphics))
 				{
 					plaques[i] = null;
 				}

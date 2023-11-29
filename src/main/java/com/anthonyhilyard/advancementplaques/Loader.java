@@ -1,5 +1,7 @@
 package com.anthonyhilyard.advancementplaques;
 
+import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.IExtensionPoint;

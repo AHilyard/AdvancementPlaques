@@ -40,13 +40,14 @@ dependencies {
 	minecraft "net.minecraftforge:forge:${project.mcVersion}-${project.forgeVersion}"
 
 	//implementation fg.deobf('curse.maven:iceberg-520110:4257665')
-	implementation fg.deobf(files('libs/Iceberg-1.20.1-forge-1.1.10.jar'))
+	implementation fg.deobf(files('libs/Iceberg-1.20.2-forge-1.1.16.jar'))
+	implementation fg.deobf('curse.maven:prism-638111:4650325')
 
-	implementation fg.deobf('curse.maven:placebo-283644:3781199')
-	implementation fg.deobf('curse.maven:toastcontrol-271740:3717855')
+	implementation fg.deobf('curse.maven:placebo-283644:4879089')
+	implementation fg.deobf('curse.maven:toastcontrol-271740:4711316')
 
-	implementation fg.deobf('curse.maven:jade-324717:3834997')
-	implementation fg.deobf('curse.maven:wthit-455982:3835298')
+	implementation fg.deobf('curse.maven:jade-324717:4822578')
+	implementation fg.deobf('curse.maven:wthit-455982:4889927')
 }
 
 jar {
