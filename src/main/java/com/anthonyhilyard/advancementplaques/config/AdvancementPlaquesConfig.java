@@ -1,4 +1,4 @@
-package com.anthonyhilyard.advancementplaques;
+package com.anthonyhilyard.advancementplaques.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,9 @@ import com.electronwill.nightconfig.core.Config;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
@@ -53,6 +56,7 @@ public class AdvancementPlaquesConfig
 	public final DoubleValue challengeDuration;
 
 	public final ConfigValue<List<? extends String>> whitelist;
+	public final ConfigValue<List<? extends String>> blacklist;
 	public final BooleanValue muteTasks;
 	public final BooleanValue muteGoals;
 	public final BooleanValue muteChallenges;
@@ -89,11 +93,73 @@ public class AdvancementPlaquesConfig
 
 		build.pop().push("functionality_options");
 
-		whitelist = build.comment(" Whitelist of advancements to show plaques for.  Leave empty to display for all.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> ResourceLocation.isValidResourceLocation((String)e) );
+		blacklist = build.comment(" Blacklist of advancements to never show plaques for.  Takes precedence over whitelist if they conflict.\n" +
+								  " Options:\n" +
+								  "  Advancement ID (eg. \"minecraft:adventure/adventuring_time\")\n" +
+								  "  Mod ID (Omit the colon, eg. \"minecraft\")\n" +
+								  "  Advancement Category (End with a /, eg. \"minecraft:story/\")").defineListAllowEmpty(Arrays.asList("blacklist"), () -> new ArrayList<String>(), e -> true );
+		whitelist = build.comment(" Whitelist of advancements to show plaques for.  Leave empty to display for all.\n" +
+								  " Same options available as blacklist.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> true );
 		muteTasks = build.comment(" If task sounds should be muted.").define("mute_tasks", false);
 		muteGoals = build.comment(" If goal sounds should be muted.").define("mute_goals", false);
 		muteChallenges = build.comment(" If challenge sounds should be muted.").define("mute_challenges", false);
 
 		build.pop().pop();
+	}
+
+	private static boolean advancementEntryMatches(Advancement advancement, String entry)
+	{
+		ResourceLocation advancementId = advancement.getId();
+
+		// Exact match.
+		if (advancementId.toString().equals(entry))
+		{
+			return true;
+		}
+
+		// Mod match.
+		if (!entry.contains(":") && advancementId.getNamespace().toString().equals(entry))
+		{
+			return true;
+		}
+
+		// Category match.
+		if (entry.endsWith("/") && advancementId.toString().startsWith(entry))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean showPlaqueForAdvancement(Advancement advancement)
+	{
+		DisplayInfo displayInfo = advancement.getDisplay();
+
+		// First check if the advancement is blacklisted.
+		for (String blacklistEntry : AdvancementPlaquesConfig.INSTANCE.blacklist.get())
+		{
+			if (advancementEntryMatches(advancement, blacklistEntry))
+			{
+				return false;
+			}
+		}
+
+		// Now check if the advancement type is filtered out.
+		boolean advancementFiltered = !((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
+										(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
+										(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()));
+		if (advancementFiltered)
+		{
+			// Check the whitelist to see if the advancement should be shown anyways.
+			for (String whitelistEntry : AdvancementPlaquesConfig.INSTANCE.whitelist.get())
+			{
+				if (advancementEntryMatches(advancement, whitelistEntry))
+				{
+					return true;
+				}
+			}
+		}
+		return !advancementFiltered;
 	}
 }

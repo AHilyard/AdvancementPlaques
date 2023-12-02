@@ -4,19 +4,17 @@ import java.util.Arrays;
 import java.util.Deque;
 
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
-import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import dev.banzetta.toastmanager.ManagedToastComponent;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.fabricmc.loader.api.FabricLoader;
@@ -41,11 +39,7 @@ public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComp
 		if (toastIn instanceof AdvancementToast)
 		{
 			AdvancementToast advancementToast = (AdvancementToast)toastIn;
-			DisplayInfo displayInfo = advancementToast.advancement.getDisplay();
-			if ((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
-				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
-				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
-				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
+			if (AdvancementPlaquesConfig.showPlaqueForAdvancement(advancementToast.advancement))
 			{
 				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
 				advancementToastsQueue.add((AdvancementToast)toastIn);
@@ -57,14 +51,14 @@ public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComp
 	}
 
 	@Override
-	public void render(PoseStack stack)
+	public void render(GuiGraphics graphics)
 	{
 		if (!mc.options.hideGui)
 		{
 			try
 			{
 				// Do toasts.
-				super.render(stack);
+				super.render(graphics);
 
 				// If Waila/Hwyla/Jade/WTHIT is installed, turn it off while the plaque is drawing if configured to do so.
 				boolean wailaLoaded = FabricLoader.getInstance().isModLoaded("waila");
@@ -110,7 +104,7 @@ public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComp
 				{
 					AdvancementPlaque toastinstance = plaques[i];
 
-					if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
+					if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, graphics))
 					{
 						plaques[i] = null;
 					}

@@ -34,10 +34,11 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricVersion}"
 
 	modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forgeConfigApiVersion}"
-	modImplementation "curse.maven:iceberg-539382:3832794"
+	//modImplementation "curse.maven:iceberg-539382:3832794"
+	modImplementation files("libs/Iceberg-1.20.1-fabric-1.1.10.jar")
 	modImplementation "curse.maven:jade-324717:3836188"
-	//modImplementation "curse.maven:toastmanager-662724:3946547"
-	modImplementation files("lib/ToastManager-1.19.2-1.0.0.jar")
+	//modImplementation "curse.maven:toastmanager-662724:4494070"
+	modImplementation files("libs/ToastManager-1.19.4-1.0.2.jar")
 	modImplementation "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
 }
 
@@ -56,10 +57,6 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 	it.options.release = 17
-}
-
-java {
-	withSourcesJar()
 }
 
 jar {

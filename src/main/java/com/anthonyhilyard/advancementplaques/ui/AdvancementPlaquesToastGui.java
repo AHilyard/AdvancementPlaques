@@ -4,15 +4,13 @@ import java.util.Arrays;
 import java.util.Deque;
 
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
-import com.anthonyhilyard.advancementplaques.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
-import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
@@ -38,11 +36,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 		if (toastIn instanceof AdvancementToast)
 		{
 			AdvancementToast advancementToast = (AdvancementToast)toastIn;
-			DisplayInfo displayInfo = advancementToast.advancement.getDisplay();
-			if ((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
-				(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
-				(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
-				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.getId().toString()))
+			if (AdvancementPlaquesConfig.showPlaqueForAdvancement(advancementToast.advancement))
 			{
 				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
 				advancementToastsQueue.add((AdvancementToast)toastIn);
@@ -54,12 +48,12 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 	}
 
 	@Override
-	public void render(PoseStack stack)
+	public void render(GuiGraphics graphics)
 	{
 		if (!mc.options.hideGui)
 		{
 			// Do toasts.
-			super.render(stack);
+			super.render(graphics);
 
 			try
 			{
@@ -112,7 +106,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 			{
 				AdvancementPlaque toastinstance = plaques[i];
 
-				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, stack))
+				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, graphics))
 				{
 					plaques[i] = null;
 				}

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGui;
 
 public class AdvancementPlaques
@@ -40,7 +41,7 @@ public class AdvancementPlaques
 				// Check if Toast Manager is loaded.
 				if (FabricLoader.getInstance().isModLoaded("toastmanager"))
 				{
-					newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.AdvancementPlaquesToastGuiWithToastManager").getConstructor(Minecraft.class).newInstance(client);
+					newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGuiWithToastManager").getConstructor(Minecraft.class).newInstance(client);
 				}
 				else
 				{
