@@ -71,7 +71,7 @@ public class AdvancementPlaque
 			return Visibility.SHOW;
 		}
 
-		DisplayInfo displayInfo = toast.advancement.value().display().get();
+		DisplayInfo displayInfo = toast.advancement.value().display().orElse(null);
 		PoseStack poseStack = graphics.pose();
 
 		if (displayInfo != null)
@@ -140,7 +140,6 @@ public class AdvancementPlaque
 					if (titleWidth <= (220 / 1.5f))
 					{
 						poseStack.pushPose();
-
 						poseStack.scale(1.5f, 1.5f, 1.0f);
 
 						// GuiGraphics.drawString doesn't support alpha, so draw the string manually.

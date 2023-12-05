@@ -10,6 +10,9 @@ import com.electronwill.nightconfig.core.Config;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -38,6 +41,7 @@ public class AdvancementPlaquesConfig
 
 	public final BooleanValue onTop;
 	public final IntValue distance;
+	public final IntValue horizontalOffset;
 	public final BooleanValue hideWaila;
 
 	public final BooleanValue tasks;
@@ -57,6 +61,7 @@ public class AdvancementPlaquesConfig
 	public final DoubleValue challengeDuration;
 
 	public final ConfigValue<List<? extends String>> whitelist;
+	public final ConfigValue<List<? extends String>> blacklist;
 
 	public final DoubleValue taskVolume;
 	public final DoubleValue goalVolume;
@@ -74,6 +79,7 @@ public class AdvancementPlaquesConfig
 
 		onTop = build.comment(" If plaques should show on the top of the screen.").define("on_top", true);
 		distance = build.comment(" The distance from the top or bottom of the screen, in pixels.").defineInRange("distance", 16, 8, 256);
+		horizontalOffset = build.comment(" The horizontal offset from the center, in pixels.").defineInRange("horizontal_offset", 0, -256, 256);
 		hideWaila = build.comment(" Hide waila/hwyla/jade popups while plaques are showing.").define("hide_waila", false);
 
 		tasks = build.comment(" If plaques should show for task advancements (normal advancements).").define("tasks", true);
@@ -103,12 +109,80 @@ public class AdvancementPlaquesConfig
 
 		build.pop().push("functionality_options");
 
-		whitelist = build.comment(" Whitelist of advancements to show plaques for.  Leave empty to display for all.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> ResourceLocation.isValidResourceLocation((String)e) );
+		blacklist = build.comment(" Blacklist of advancements to never show plaques for.  Takes precedence over whitelist if they conflict.\n" +
+								  " Options:\n" +
+								  "  Advancement ID (eg. \"minecraft:adventure/adventuring_time\")\n" +
+								  "  Mod ID (Omit the colon, eg. \"minecraft\")\n" +
+								  "  Advancement Category (End with a /, eg. \"minecraft:story/\")").defineListAllowEmpty(Arrays.asList("blacklist"), () -> new ArrayList<String>(), e -> true );
+		whitelist = build.comment(" Whitelist of advancements to show plaques for.  Leave empty to display for all.\n" +
+								  " Same options available as blacklist.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> true );
 		taskVolume = build.comment(" Volume of task sounds.  Set to 0 to mute.").defineInRange("task_volume", 1.0, 0.0, 1.0);
 		goalVolume = build.comment(" Volume of goal sounds.  Set to 0 to mute.").defineInRange("goal_volume", 1.0, 0.0, 1.0);
 		challengeVolume = build.comment(" Volume of challenge sounds.  Set to 0 to mute.").defineInRange("challenge_volume", 1.0, 0.0, 1.0);
 
 		build.pop().pop();
+	}
+
+	private static boolean advancementEntryMatches(AdvancementHolder advancementHolder, String entry)
+	{
+		ResourceLocation advancementId = advancementHolder.id();
+
+		// Exact match.
+		if (advancementId.toString().equals(entry))
+		{
+			return true;
+		}
+
+		// Mod match.
+		if (!entry.contains(":") && advancementId.getNamespace().toString().equals(entry))
+		{
+			return true;
+		}
+
+		// Category match.
+		if (entry.endsWith("/") && advancementId.toString().startsWith(entry))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean showPlaqueForAdvancement(AdvancementHolder advancementHolder)
+	{
+		// First check if the advancement is blacklisted.
+		for (String blacklistEntry : AdvancementPlaquesConfig.INSTANCE.blacklist.get())
+		{
+			if (advancementEntryMatches(advancementHolder, blacklistEntry))
+			{
+				return false;
+			}
+		}
+
+		DisplayInfo displayInfo = advancementHolder.value().display().orElse(null);
+
+		// If this advancement doesn't have any display info for some reason, we can't show a plaque anyways.
+		if (displayInfo == null)
+		{
+			return false;
+		}
+
+		// Now check if the advancement type is filtered out.
+		boolean advancementFiltered = !((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
+										(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
+										(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()));
+		if (advancementFiltered)
+		{
+			// Check the whitelist to see if the advancement should be shown anyways.
+			for (String whitelistEntry : AdvancementPlaquesConfig.INSTANCE.whitelist.get())
+			{
+				if (advancementEntryMatches(advancementHolder, whitelistEntry))
+				{
+					return true;
+				}
+			}
+		}
+		return !advancementFiltered;
 	}
 
 	public TextColor getTitleColor(float alpha)

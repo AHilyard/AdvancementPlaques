@@ -3,14 +3,14 @@ package com.anthonyhilyard.advancementplaques.ui;
 import java.util.Arrays;
 import java.util.Deque;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 
-import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
@@ -39,12 +39,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 		if (toastIn instanceof AdvancementToast)
 		{
 			AdvancementToast advancementToast = (AdvancementToast)toastIn;
-			DisplayInfo displayInfo = advancementToast.advancement.value().display().get();
-			if (displayInfo != null &&
-				((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
-				 (displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
-				 (displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()) ||
-				AdvancementPlaquesConfig.INSTANCE.whitelist.get().contains(advancementToast.advancement.id().toString())))
+			if (AdvancementPlaquesConfig.showPlaqueForAdvancement(advancementToast.advancement))
 			{
 				// Special logic for advancement toasts.  Store them seperately since they will be displayed seperately.
 				advancementToastsQueue.add((AdvancementToast)toastIn);
@@ -80,7 +75,6 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 						}
 					}
 
-
 					if (anyPlaques)
 					{
 						if (wailaLoaded)
@@ -107,7 +101,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 			}
 			catch (Exception e)
 			{
-				AdvancementPlaques.LOGGER.error(e);
+				AdvancementPlaques.LOGGER.error(ExceptionUtils.getStackTrace(e));
 			}
 
 			// Do plaques.

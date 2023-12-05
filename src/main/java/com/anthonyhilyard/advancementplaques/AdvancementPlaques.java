@@ -13,6 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +48,7 @@ public class AdvancementPlaques
 					final ToastComponent newToastComponent;
 					if (ModList.get().isLoaded("toastcontrol"))
 					{
-						newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.AdvancementPlaquesToastGuiWithToastControl").getConstructor(Minecraft.class).newInstance(Minecraft.getInstance());
+						newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGuiWithToastControl").getConstructor(Minecraft.class).newInstance(Minecraft.getInstance());
 					}
 					else
 					{
@@ -65,7 +66,7 @@ public class AdvancementPlaques
 				}
 				catch (Exception e)
 				{
-					LOGGER.error(e);
+					LOGGER.error(ExceptionUtils.getStackTrace(e));
 				}
 			}
 		});
