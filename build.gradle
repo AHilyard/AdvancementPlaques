@@ -35,8 +35,9 @@ dependencies {
 
 	modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forgeConfigApiVersion}"
 	//modImplementation "curse.maven:iceberg-539382:3832794"
+	modImplementation 'curse.maven:prism-665526:4650327'
 	modImplementation files("libs/Iceberg-1.20.1-fabric-1.1.10.jar")
-	modImplementation "curse.maven:jade-324717:3836188"
+	modImplementation "curse.maven:jade-324717:4858827"
 	//modImplementation "curse.maven:toastmanager-662724:4494070"
 	modImplementation files("libs/ToastManager-1.19.4-1.0.2.jar")
 	modImplementation "mcp.mobius.waila:wthit:fabric-${wthitVersion}"

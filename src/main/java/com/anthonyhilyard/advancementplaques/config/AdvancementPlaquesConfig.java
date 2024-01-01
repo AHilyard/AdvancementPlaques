@@ -3,22 +3,30 @@ package com.anthonyhilyard.advancementplaques.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
+import com.anthonyhilyard.advancementplaques.Loader;
 import com.electronwill.nightconfig.core.Config;
+
+import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.advancements.Advancement;
+import net.minecraft.network.chat.TextColor;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.common.ForgeConfigSpec.LongValue;
+import net.minecraftforge.fml.config.ModConfig;
 
+@SuppressWarnings("deprecation")
 public class AdvancementPlaquesConfig
 {
 	public static final ForgeConfigSpec SPEC;
@@ -39,9 +47,6 @@ public class AdvancementPlaquesConfig
 	public final BooleanValue tasks;
 	public final BooleanValue goals;
 	public final BooleanValue challenges;
-
-	public final LongValue titleColor;
-	public final LongValue nameColor;
 	
 	public final DoubleValue taskEffectFadeInTime;
 	public final DoubleValue taskEffectFadeOutTime;
@@ -57,9 +62,16 @@ public class AdvancementPlaquesConfig
 
 	public final ConfigValue<List<? extends String>> whitelist;
 	public final ConfigValue<List<? extends String>> blacklist;
-	public final BooleanValue muteTasks;
-	public final BooleanValue muteGoals;
-	public final BooleanValue muteChallenges;
+
+	public final DoubleValue taskVolume;
+	public final DoubleValue goalVolume;
+	public final DoubleValue challengeVolume;
+
+	private final Supplier<ConfigValue<?>> titleSupplier;
+	private final Supplier<ConfigValue<?>> nameSupplier;
+
+	private TextColor titleColor = null;
+	private TextColor nameColor = null;
 
 	public AdvancementPlaquesConfig(ForgeConfigSpec.Builder build)
 	{
@@ -74,8 +86,12 @@ public class AdvancementPlaquesConfig
 		goals = build.comment(" If plaques should show for goal advancements (medium-difficulty advancements).").define("goals", true);
 		challenges = build.comment(" If plaques should show for challenge advancements (high-difficulty advancements).").define("challenges", true);
 
-		titleColor = build.comment(" Text color to use for plaque titles (like \"Advancement made!\"). Can be entered as an 8-digit hex color code 0xAARRGGBB for convenience.").defineInRange("title_color", 0xFF332200L, 0x00000000L, 0xFFFFFFFFL);
-		nameColor = build.comment(" Text color to use for advancement names on plaques. Can be entered as an 8-digit hex color code 0xAARRGGBB for convenience.").defineInRange("name_color", 0xFFFFFFFFL, 0x00000000L, 0xFFFFFFFFL);
+		// Parse the color values.
+		ConfigValue<?> titleColorValue = build.comment(" Text color to use for plaque titles (like \"Advancement made!\"). Can be entered as an 8-digit hex color code #AARRGGBB for convenience. If Prism library is installed, any Prism color definition is supported.").define("title_color", "#FF332200", v -> validateColor(v));
+		ConfigValue<?> nameColorValue =  build.comment(" Text color to use for advancement names on plaques. Can be entered as an 8-digit hex color code #AARRGGBB for convenience. If Prism library is installed, any Prism color definition is supported.").define("name_color", "#FFFFFFFF", v -> validateColor(v));
+
+		titleSupplier = () -> titleColorValue;
+		nameSupplier = () -> nameColorValue;
 
 		build.pop().push("duration_options");
 
@@ -100,16 +116,19 @@ public class AdvancementPlaquesConfig
 								  "  Advancement Category (End with a /, eg. \"minecraft:story/\")").defineListAllowEmpty(Arrays.asList("blacklist"), () -> new ArrayList<String>(), e -> true );
 		whitelist = build.comment(" Whitelist of advancements to show plaques for.  Leave empty to display for all.\n" +
 								  " Same options available as blacklist.").defineListAllowEmpty(Arrays.asList("whitelist"), () -> new ArrayList<String>(), e -> true );
-		muteTasks = build.comment(" If task sounds should be muted.").define("mute_tasks", false);
-		muteGoals = build.comment(" If goal sounds should be muted.").define("mute_goals", false);
-		muteChallenges = build.comment(" If challenge sounds should be muted.").define("mute_challenges", false);
+		taskVolume = build.comment(" Volume of task sounds.  Set to 0 to mute.").defineInRange("task_volume", 1.0, 0.0, 1.0);
+		goalVolume = build.comment(" Volume of goal sounds.  Set to 0 to mute.").defineInRange("goal_volume", 1.0, 0.0, 1.0);
+		challengeVolume = build.comment(" Volume of challenge sounds.  Set to 0 to mute.").defineInRange("challenge_volume", 1.0, 0.0, 1.0);
 
 		build.pop().pop();
+
+		ModConfigEvents.reloading(Loader.MODID).register(AdvancementPlaquesConfig::onReload);
+
 	}
 
-	private static boolean advancementEntryMatches(Advancement advancement, String entry)
+	private static boolean advancementEntryMatches(AdvancementHolder advancementHolder, String entry)
 	{
-		ResourceLocation advancementId = advancement.getId();
+		ResourceLocation advancementId = advancementHolder.id();
 
 		// Exact match.
 		if (advancementId.toString().equals(entry))
@@ -132,17 +151,23 @@ public class AdvancementPlaquesConfig
 		return false;
 	}
 
-	public static boolean showPlaqueForAdvancement(Advancement advancement)
+	public static boolean showPlaqueForAdvancement(AdvancementHolder advancementHolder)
 	{
-		DisplayInfo displayInfo = advancement.getDisplay();
-
 		// First check if the advancement is blacklisted.
 		for (String blacklistEntry : AdvancementPlaquesConfig.INSTANCE.blacklist.get())
 		{
-			if (advancementEntryMatches(advancement, blacklistEntry))
+			if (advancementEntryMatches(advancementHolder, blacklistEntry))
 			{
 				return false;
 			}
+		}
+
+		DisplayInfo displayInfo = advancementHolder.value().display().orElse(null);
+
+		// If this advancement doesn't have any display info for some reason, we can't show a plaque anyways.
+		if (displayInfo == null)
+		{
+			return false;
 		}
 
 		// Now check if the advancement type is filtered out.
@@ -154,12 +179,98 @@ public class AdvancementPlaquesConfig
 			// Check the whitelist to see if the advancement should be shown anyways.
 			for (String whitelistEntry : AdvancementPlaquesConfig.INSTANCE.whitelist.get())
 			{
-				if (advancementEntryMatches(advancement, whitelistEntry))
+				if (advancementEntryMatches(advancementHolder, whitelistEntry))
 				{
 					return true;
 				}
 			}
 		}
 		return !advancementFiltered;
+	}
+
+	public TextColor getTitleColor(float alpha)
+	{
+		// If the title color hasn't been resolved, do it now.
+		if (titleColor == null)
+		{
+			resolveColors();
+		}
+
+		return applyAlpha(titleColor, alpha);
+	}
+
+	public TextColor getNameColor(float alpha)
+	{
+		// If the name color hasn't been resolved, do it now.
+		if (nameColor == null)
+		{
+			resolveColors();
+		}
+
+		return applyAlpha(nameColor, alpha);
+	}
+
+	private TextColor applyAlpha(TextColor color, float alpha)
+	{
+		int tempColor = color.getValue();
+		int tempAlpha = (int)(((tempColor >> 24) & 0xFF) * alpha);
+		return TextColor.fromRgb((tempColor & 0xFFFFFF) | (tempAlpha << 24));
+	}
+
+	private static void resolveColors()
+	{
+		INSTANCE.titleColor = getColor(INSTANCE.titleSupplier.get().get(), TextColor.fromRgb(0xFF332200));
+		INSTANCE.nameColor = getColor(INSTANCE.nameSupplier.get().get(), TextColor.fromRgb(0xFFFFFFFF));
+	}
+
+	private static boolean validateColor(Object value)
+	{
+		return getColor(value, null) != null;
+	}
+
+	private static TextColor getColor(Object value, TextColor defaultColor)
+	{
+		// If Prism is available, let it parse the value.
+		if (FabricLoader.getInstance().isModLoaded("prism"))
+		{
+			try
+			{
+				return (TextColor)Class.forName("com.anthonyhilyard.advancementplaques.compat.PrismHandler").getMethod("getColor", Object.class).invoke(null, value);
+			}
+			catch (Exception e)
+			{
+				// Something went wrong, oops.
+			}
+		}
+
+		// Otherwise, parse the value as hex.
+		if (value instanceof String string)
+		{
+			TextColor parsedColor = TextColor.parseColor(string);
+			if (parsedColor == null)
+			{
+				string = "#" + string.replace("0x", "").replace("#", "");
+				parsedColor = TextColor.parseColor(string);
+			}
+
+			if (parsedColor != null)
+			{
+				return parsedColor;
+			}
+		}
+		else if (value instanceof Number number)
+		{
+			return TextColor.fromRgb(number.intValue());
+		}
+		return defaultColor;
+	}
+
+	public static void onReload(ModConfig config)
+	{
+		if (config.getModId().equals(Loader.MODID))
+		{
+			// Also resolve the colors again.
+			resolveColors();
+		}
 	}
 }

@@ -47,6 +47,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 		super.addToast(toastIn);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void render(GuiGraphics graphics)
 	{
@@ -106,7 +107,7 @@ public class AdvancementPlaquesToastGui extends ToastComponent
 			{
 				AdvancementPlaque toastinstance = plaques[i];
 
-				if (toastinstance != null && toastinstance.render(mc.getWindow().getGuiScaledWidth(), i, graphics))
+				if (toastinstance != null && toastinstance.render(graphics.guiWidth(), i, graphics))
 				{
 					plaques[i] = null;
 				}

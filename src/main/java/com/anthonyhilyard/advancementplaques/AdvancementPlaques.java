@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGui;
 
+@SuppressWarnings("deprecation")
 public class AdvancementPlaques
 {
 	public static final Logger LOGGER = LogManager.getLogger(Loader.MODID);
