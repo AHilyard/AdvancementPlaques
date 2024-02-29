@@ -27,14 +27,14 @@
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"fabric": "*",
-		"minecraft": ">=1.20.2",
+		"minecraft": ">=1.20.4",
 		"java": ">=17",
-		"forgeconfigapiport": ">=9.1",
-		"iceberg": ">=1.1.16"
+		"forgeconfigapiport": ">=20.4",
+		"iceberg": ">=1.1.18"
 	},
 	"suggests": {
 		"waila": "*",
-		"jade": ">=7.4.0",
+		"jade": ">=13.2.0",
 		"toastmanager": "*"
 	},
 	"conflicts": {

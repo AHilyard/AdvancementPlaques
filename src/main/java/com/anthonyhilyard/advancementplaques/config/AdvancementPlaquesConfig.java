@@ -15,8 +15,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.network.chat.TextColor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.FrameType;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -171,9 +171,9 @@ public class AdvancementPlaquesConfig
 		}
 
 		// Now check if the advancement type is filtered out.
-		boolean advancementFiltered = !((displayInfo.getFrame() == FrameType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
-										(displayInfo.getFrame() == FrameType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
-										(displayInfo.getFrame() == FrameType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()));
+		boolean advancementFiltered = !((displayInfo.getType() == AdvancementType.TASK && AdvancementPlaquesConfig.INSTANCE.tasks.get()) ||
+										(displayInfo.getType() == AdvancementType.GOAL && AdvancementPlaquesConfig.INSTANCE.goals.get()) ||
+										(displayInfo.getType() == AdvancementType.CHALLENGE && AdvancementPlaquesConfig.INSTANCE.challenges.get()));
 		if (advancementFiltered)
 		{
 			// Check the whitelist to see if the advancement should be shown anyways.
@@ -246,11 +246,11 @@ public class AdvancementPlaquesConfig
 		// Otherwise, parse the value as hex.
 		if (value instanceof String string)
 		{
-			TextColor parsedColor = TextColor.parseColor(string);
+			TextColor parsedColor = TextColor.parseColor(string).result().orElse(null);
 			if (parsedColor == null)
 			{
 				string = "#" + string.replace("0x", "").replace("#", "");
-				parsedColor = TextColor.parseColor(string);
+				parsedColor = TextColor.parseColor(string).result().orElse(null);
 			}
 
 			if (parsedColor != null)

@@ -9,8 +9,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.Util;
+import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.GuiGraphics;
@@ -80,7 +80,7 @@ public class AdvancementPlaque
 		{
 			float fadeInTime, fadeOutTime, duration;
 			
-			switch (displayInfo.getFrame())
+			switch (displayInfo.getType())
 			{
 				default:
 				case TASK:
@@ -121,11 +121,11 @@ public class AdvancementPlaque
 				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
 				RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUES);
 				int frameOffset = 0;
-				if (displayInfo.getFrame() == FrameType.GOAL)
+				if (displayInfo.getType() == AdvancementType.GOAL)
 				{
 					frameOffset = 1;
 				}
-				else if (displayInfo.getFrame() == FrameType.CHALLENGE)
+				else if (displayInfo.getType() == AdvancementType.CHALLENGE)
 				{
 					frameOffset = 2;
 				}
@@ -136,10 +136,10 @@ public class AdvancementPlaque
 				if (alpha > 0.1f)
 				{
 					// Text like "Challenge Complete!" at the top of the plaque.
-					int typeWidth = mc.font.width(displayInfo.getFrame().getDisplayName());
+					int typeWidth = mc.font.width(displayInfo.getType().getDisplayName());
 
 					// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
-					mc.font.drawInBatch(displayInfo.getFrame().getDisplayName(), (int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
+					mc.font.drawInBatch(displayInfo.getType().getDisplayName(), (int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
 
 					int titleWidth = mc.font.width(displayInfo.getTitle());
 
@@ -190,7 +190,7 @@ public class AdvancementPlaque
 					try
 					{
 						// Play sound based on frame type.
-						switch (displayInfo.getFrame())
+						switch (displayInfo.getType())
 						{
 							case TASK:
 								if (AdvancementPlaquesConfig.INSTANCE.taskVolume.get() > 0.0)
@@ -235,7 +235,7 @@ public class AdvancementPlaque
 				poseStack.translate(0.0f, 0.0f, 95.0f);
 				RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
 
-				if (displayInfo.getFrame() == FrameType.CHALLENGE)
+				if (displayInfo.getType() == AdvancementType.CHALLENGE)
 				{
 					GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, height() + 32, width() + 32, height() + 32, 512, 512);
 				}
