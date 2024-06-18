@@ -18,7 +18,7 @@ import net.fabricmc.loader.api.FabricLoader;
 
 public class AdvancementPlaquesToastGui extends ToastComponent
 {
-	private final AdvancementPlaque[] plaques = new AdvancementPlaque[3];
+	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
