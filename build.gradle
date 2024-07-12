@@ -1,74 +1,48 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
-	id 'maven-publish'
+	id 'dev.architectury.loom' version '1.6-SNAPSHOT' apply false
+	id 'architectury-plugin' version '3.4-SNAPSHOT'
+	id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
+architectury {
+	minecraft = project.minecraftVersion
+}
 
-archivesBaseName = project.name + '-' + project.mcVersion + '-fabric'
+allprojects {
+	group = rootProject.group
+	version = rootProject.modVersion
+}
 
-sourceSets.main.java.srcDirs += 'java'
-sourceSets.main.resources.srcDirs += 'resources'
+subprojects {
+	apply plugin: 'dev.architectury.loom'
+	apply plugin: 'architectury-plugin'
 
-repositories {
-	maven {
-		name = "CurseMaven"
-		url = "https://www.cursemaven.com"
-		content { includeGroup "curse.maven" }
+	base {
+		archivesName = "$rootProject.name-$rootProject.minecraftVersion-$project.name"
 	}
-	maven {
-		name = "Fuzs Mod Resources"
-		url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+
+	repositories {
+		maven {
+			name = "CurseMaven"
+			url = "https://www.cursemaven.com"
+		}
 	}
-	maven {
-		name = "WTHIT"
-		url = "https://maven.bai.lol"
+
+	dependencies {
+		minecraft "net.minecraft:minecraft:$rootProject.minecraftVersion"
+		mappings loom.officialMojangMappings()
 	}
-}
 
-dependencies {
-	minecraft "com.mojang:minecraft:${project.mcVersion}"
-	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:${project.loaderVersion}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricVersion}"
-
-	modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forgeConfigApiVersion}"
-	//modImplementation "curse.maven:iceberg-539382:3832794"
-	modImplementation "curse.maven:prism-665526:4650327"
-	modImplementation files("libs/Iceberg-1.20.1-fabric-1.1.10.jar")
-	modImplementation "curse.maven:jade-324717:4858827"
-	//modImplementation "curse.maven:toastmanager-662724:4494070"
-	modImplementation files("libs/ToastManager-1.19.4-1.0.2.jar")
-	modImplementation "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
-	modImplementation "curse.maven:advancementscreenshot-414086:4976487"
-}
-
-loom {
-	accessWidenerPath = file("src/main/resources/${project.name.toLowerCase()}.accesswidener")
-}
-
-processResources {
-	inputs.property 'version', project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+	java {
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
 	}
-}
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	it.options.release = 21
-}
+	tasks.withType(JavaCompile).configureEach {
+		it.options.release = 21
+	}
 
-jar {
-	manifest {
-		attributes(["Specification-Title":		project.name,
-					"Specification-Vendor":		project.author,
-					"Specification-Version":	project.version,
-					"Implementation-Title":		project.name,
-					"Implementation-Version":	project.version,
-					"Implementation-Vendor" :	project.author,
-					"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+	remapJar {
+		destinationDirectory = file("$buildDir/../../output")
 	}
 }

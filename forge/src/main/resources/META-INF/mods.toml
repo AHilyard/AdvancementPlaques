@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="[51,)"
+license="CC BY-NC-ND 4.0"
+
+[[mods]]
+modId="advancementplaques"
+version="${version}"
+displayName="Advancement Plaques"
+displayURL="https://anthonyhilyard.com/"
+updateJSONURL="https://mc-update-check.anthonyhilyard.com/499826"
+logoFile="icon.png"
+authors="Grend"
+description="Replaces standard advancement toasts with fancy plaques."
+
+[[dependencies.advancementplaques]]
+	modId="forge"
+	mandatory=true
+	versionRange="[51,)"
+	ordering="NONE"
+	side="BOTH"
+
+[[dependencies.advancementplaques]]
+	modId="minecraft"
+	mandatory=true
+	versionRange="[1.21,)"
+	ordering="NONE"
+	side="BOTH"
+
+[[dependencies.advancementplaques]]
+	modId="iceberg"
+	mandatory=true
+	versionRange="[1.2.0,)"
+	ordering="NONE"
+	side="BOTH"
+
+[[dependencies.advancementplaques]]
+	modId="toastcontrol"
+	mandatory=false
+	versionRange="[8.0,)"
+	ordering="NONE"
+	side="BOTH"
