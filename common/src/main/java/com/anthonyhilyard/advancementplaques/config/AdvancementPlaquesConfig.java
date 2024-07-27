@@ -7,8 +7,7 @@ import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.iceberg.config.IcebergConfig;
 import com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder;
 import com.anthonyhilyard.iceberg.services.Services;
-
-import org.spongepowered.include.com.google.common.collect.Lists;
+import com.google.common.collect.Lists;
 
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
