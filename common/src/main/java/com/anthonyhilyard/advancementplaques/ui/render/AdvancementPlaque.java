@@ -110,7 +110,7 @@ public class AdvancementPlaque
 					{
 						alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - duration) / 1000.0f));
 						
-						if (Services.PLATFORM.isModLoaded("canvas"))
+						if (Services.getPlatformHelper().isModLoaded("canvas"))
 						{
 							alpha = 0;
 						}
@@ -171,7 +171,7 @@ public class AdvancementPlaque
 					poseStack.translate(1.0f, 1.0f, 0.0f);
 					poseStack.scale(1.5f, 1.5f, 1.0f);
 
-					if (Services.PLATFORM.isModLoaded("canvas"))
+					if (Services.getPlatformHelper().isModLoaded("canvas"))
 					{
 						if (alpha > 0)
 						{
@@ -223,7 +223,7 @@ public class AdvancementPlaque
 					}
 
 					// If Advancement Screenshot is installed and we're ready to take a screenshot, do it.
-					if (displayTime >= fadeInTime + fadeOutTime && alpha == 1.0f && !hasTakenScreenshot && Services.PLATFORM.isModLoaded("advancementscreenshot"))
+					if (displayTime >= fadeInTime + fadeOutTime && alpha == 1.0f && !hasTakenScreenshot && Services.getPlatformHelper().isModLoaded("advancementscreenshot"))
 					{
 						try
 						{

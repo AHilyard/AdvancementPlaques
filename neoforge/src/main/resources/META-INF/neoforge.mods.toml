@@ -29,7 +29,7 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="iceberg"
 	type="required"
-	versionRange="[1.2.0,)"
+	versionRange="[1.2.1,)"
 	ordering="AFTER"
 	side="BOTH"
 

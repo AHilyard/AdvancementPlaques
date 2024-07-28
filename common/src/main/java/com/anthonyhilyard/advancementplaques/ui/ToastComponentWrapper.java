@@ -61,8 +61,8 @@ public class ToastComponentWrapper extends ToastComponent
 			try
 			{
 				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
-				boolean wailaLoaded = Services.PLATFORM.isModLoaded("waila");
-				boolean jadeLoaded = Services.PLATFORM.isModLoaded("jade");
+				boolean wailaLoaded = Services.getPlatformHelper().isModLoaded("waila");
+				boolean jadeLoaded = Services.getPlatformHelper().isModLoaded("jade");
 				if (AdvancementPlaquesConfig.getInstance().hideWaila.get() && (wailaLoaded || jadeLoaded))
 				{
 					boolean anyPlaques = false;

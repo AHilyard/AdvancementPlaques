@@ -208,7 +208,7 @@ public final class AdvancementPlaquesConfig extends IcebergConfig<AdvancementPla
 	private static TextColor getColor(Object value, TextColor defaultColor)
 	{
 		// If Prism is available, let it parse the value.
-		if (Services.PLATFORM.isModLoaded("prism"))
+		if (Services.getPlatformHelper().isModLoaded("prism"))
 		{
 			try
 			{
