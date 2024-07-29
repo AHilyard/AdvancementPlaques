@@ -23,7 +23,7 @@ dependencies {
 	// Do NOT use other classes from Fabric Loader.
 	modImplementation "net.fabricmc:fabric-loader:$rootProject.fabricLoaderVersion"
 
-	modImplementation files("../libs/Iceberg-1.21-common-1.2.1.jar")
+	modImplementation files("../libs/Iceberg-1.21-common-1.2.2.jar")
 	modImplementation files("../libs/Prism-1.21-fabric-1.0.7.jar")
 	modImplementation "curse.maven:advancementscreenshot-414086:5426348"
 	modImplementation "curse.maven:toastcontrol-271740:4711316"

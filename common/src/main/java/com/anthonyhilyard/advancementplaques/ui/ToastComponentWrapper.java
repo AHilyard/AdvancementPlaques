@@ -1,7 +1,10 @@
 package com.anthonyhilyard.advancementplaques.ui;
 
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.Deque;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
@@ -23,6 +26,7 @@ public class ToastComponentWrapper extends ToastComponent
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 	private final ToastComponent wrapped;
+	private final Lock wrapLock;
 
 	public ToastComponentWrapper(Minecraft mcIn, ToastComponent wrapped)
 	{
@@ -30,6 +34,7 @@ public class ToastComponentWrapper extends ToastComponent
 		mc = mcIn;
 		this.wrapped = wrapped;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer, mc);
+		wrapLock = new ReentrantLock();
 	}
 
 	@Override
@@ -46,7 +51,9 @@ public class ToastComponentWrapper extends ToastComponent
 			}
 		}
 
+		wrapLock.lock();
 		wrapped.addToast(toastIn);
+		wrapLock.unlock();
 	}
 
 
@@ -55,11 +62,13 @@ public class ToastComponentWrapper extends ToastComponent
 	{
 		if (!mc.options.hideGui)
 		{
-			// Do toasts.
-			wrapped.render(graphics);
-
 			try
 			{
+				// Do toasts.
+				wrapLock.lock();
+				wrapped.render(graphics);
+				wrapLock.unlock();
+
 				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
 				boolean wailaLoaded = Services.getPlatformHelper().isModLoaded("waila");
 				boolean jadeLoaded = Services.getPlatformHelper().isModLoaded("jade");
@@ -98,6 +107,10 @@ public class ToastComponentWrapper extends ToastComponent
 						}
 					}
 				}
+			}
+			catch (ConcurrentModificationException e)
+			{
+				// Don't look at me.
 			}
 			catch (Exception e)
 			{
