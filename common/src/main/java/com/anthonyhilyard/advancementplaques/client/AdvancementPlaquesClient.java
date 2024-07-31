@@ -15,6 +15,7 @@ public class AdvancementPlaquesClient
 		{
 			if (minecraft.toast != null)
 			{
+				AdvancementPlaques.LOGGER.debug("Installing Advancement Plaques toast component.");
 				minecraft.toast = new ToastComponentWrapper(minecraft, minecraft.toast);
 			}
 			else
