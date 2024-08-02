@@ -4,15 +4,26 @@ import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.client.AdvancementPlaquesClient;
 
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
-@EventBusSubscriber(modid = AdvancementPlaques.MODID, bus = Bus.MOD)
+@EventBusSubscriber(modid = AdvancementPlaques.MODID, bus = Bus.MOD, value = Dist.CLIENT)
 public class AdvancementPlaquesForgeClient
 {
+	@SubscribeEvent
+	public static void onConstructMod(final FMLConstructModEvent event)
+	{
+		AdvancementPlaques.init();
+
+		MinecraftForge.EVENT_BUS.register(AdvancementPlaquesForgeClient.class);
+	}
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onClientSetup(FMLClientSetupEvent event)
 	{
