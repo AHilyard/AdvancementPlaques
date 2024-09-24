@@ -1,9 +1,7 @@
 package com.anthonyhilyard.advancementplaques;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
@@ -15,9 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
-import com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGui;
+import com.anthonyhilyard.advancementplaques.ui.ToastComponentWrapper;
 
-@SuppressWarnings("deprecation")
 public class AdvancementPlaques
 {
 	public static final Logger LOGGER = LogManager.getLogger(Loader.MODID);
@@ -34,33 +31,22 @@ public class AdvancementPlaques
 	{
 		ForgeConfigRegistry.INSTANCE.register(Loader.MODID, ModConfig.Type.COMMON, AdvancementPlaquesConfig.SPEC);
 
-		ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
+		ClientLifecycleEvents.CLIENT_STARTED.register((minecraft) -> {
 			try
 			{
-				final ToastComponent newToastComponent;
-
-				// Check if Toast Manager is loaded.
-				if (FabricLoader.getInstance().isModLoaded("toastmanager"))
+				if (minecraft.toast != null)
 				{
-					newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGuiWithToastManager").getConstructor(Minecraft.class).newInstance(client);
+					AdvancementPlaques.LOGGER.debug("Installing Advancement Plaques toast component.");
+					minecraft.toast = new ToastComponentWrapper(minecraft, minecraft.toast);
 				}
 				else
 				{
-					newToastComponent = new AdvancementPlaquesToastGui(client);
-				}
-
-				if (newToastComponent != null)
-				{
-					client.toast = newToastComponent;
-				}
-				else
-				{
-					LOGGER.debug("Unable to update Toast GUI, Advancement Plaques will not function properly. Maybe another mod is interfering?");
+					AdvancementPlaques.LOGGER.debug("Unable to update Toast GUI, Advancement Plaques will not function properly. Maybe another mod is interfering?");
 				}
 			}
 			catch (Exception e)
 			{
-				LOGGER.error(ExceptionUtils.getStackTrace(e));
+				AdvancementPlaques.LOGGER.error(ExceptionUtils.getStackTrace(e));
 			}
 		});
 	}

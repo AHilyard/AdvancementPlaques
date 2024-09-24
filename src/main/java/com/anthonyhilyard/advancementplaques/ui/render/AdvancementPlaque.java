@@ -4,24 +4,24 @@ import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.anthonyhilyard.iceberg.util.GuiHelper;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.Util;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.Font.DisplayMode;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast.Visibility;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.fabricmc.loader.api.FabricLoader;
 
 
 public class AdvancementPlaque
@@ -30,6 +30,7 @@ public class AdvancementPlaque
 	private long animationTime = -1L;
 	private long visibleTime = -1L;
 	private boolean hasPlayedSound = false;
+	private boolean hasTakenScreenshot = false;
 	private Visibility visibility = Visibility.SHOW;
 	private Minecraft mc;
 	private CustomItemRenderer itemRenderer;
@@ -73,7 +74,7 @@ public class AdvancementPlaque
 			return Visibility.SHOW;
 		}
 
-		DisplayInfo displayInfo = toast.advancement.value().display().orElse(null);
+		DisplayInfo displayInfo = toast.advancement.getDisplay();
 		PoseStack poseStack = graphics.pose();
 
 		if (displayInfo != null)
@@ -100,152 +101,154 @@ public class AdvancementPlaque
 					break;
 			}
 
-			if (displayTime >= fadeInTime)
+			graphics.drawManaged(() ->
 			{
-				float alpha = 1.0f;
-				if (displayTime > duration)
+				if (displayTime >= fadeInTime)
 				{
-					alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - duration) / 1000.0f));
-					
-					if (FabricLoader.getInstance().isModLoaded("canvas"))
+					float alpha = 1.0f;
+					if (displayTime > duration)
 					{
-						alpha = 0;
+						alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float)displayTime - duration) / 1000.0f));
 					}
-				}
 
-				// Grab the title and name colors.
-				int titleColor = AdvancementPlaquesConfig.INSTANCE.getTitleColor(alpha).getValue();
-				int nameColor  = AdvancementPlaquesConfig.INSTANCE.getNameColor(alpha).getValue();
+					// Grab the title and name colors.
+					int titleColor = AdvancementPlaquesConfig.INSTANCE.getTitleColor(alpha).getValue();
+					int nameColor  = AdvancementPlaquesConfig.INSTANCE.getNameColor(alpha).getValue();
 
-				RenderSystem.enableBlend();
-				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-				RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUES);
-				int frameOffset = 0;
-				if (displayInfo.getFrame() == FrameType.GOAL)
-				{
-					frameOffset = 1;
-				}
-				else if (displayInfo.getFrame() == FrameType.CHALLENGE)
-				{
-					frameOffset = 2;
-				}
-
-				GuiHelper.blit(graphics.pose(), -1, -1, width(), height(), 0, height() * frameOffset, width(), height(), 256, 256);
-
-				// Only bother drawing text if alpha is greater than 0.1.
-				if (alpha > 0.1f)
-				{
-					// Text like "Challenge Complete!" at the top of the plaque.
-					int typeWidth = mc.font.width(displayInfo.getFrame().getDisplayName());
-
-					// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
-					mc.font.drawInBatch(displayInfo.getFrame().getDisplayName(), (int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
-
-					int titleWidth = mc.font.width(displayInfo.getTitle());
-
-					// If the width of the advancement title is less than the full available width, display it normally.
-					if (titleWidth <= (220 / 1.5f))
+					RenderSystem.enableBlend();
+					RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
+					RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUES);
+					int frameOffset = 0;
+					if (displayInfo.getFrame() == FrameType.GOAL)
 					{
-						poseStack.pushPose();
-						poseStack.scale(1.5f, 1.5f, 1.0f);
+						frameOffset = 1;
+					}
+					else if (displayInfo.getFrame() == FrameType.CHALLENGE)
+					{
+						frameOffset = 2;
+					}
 
+					GuiHelper.blit(graphics.pose(), -1, -1, width(), height(), 0, height() * frameOffset, width(), height(), 256, 256);
+
+					// Only bother drawing text if alpha is greater than 0.1.
+					if (alpha > 0.1f)
+					{
+						// Text like "Challenge Complete!" at the top of the plaque.
+						int typeWidth = mc.font.width(displayInfo.getFrame().getDisplayName());
+						
 						// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
-						mc.font.drawInBatch(displayInfo.getTitle(), (int)(((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f)), 9, nameColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
+						mc.font.drawInBatch(displayInfo.getFrame().getDisplayName(), (int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
 
-						poseStack.popPose();
-					}
-					// Otherwise, display it with a smaller (default) font.
-					else
-					{
-						// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
-						mc.font.drawInBatch(displayInfo.getTitle(), (int)((width() - titleWidth) / 2.0f + 15.0f), 15, nameColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
-					}
+						int titleWidth = mc.font.width(displayInfo.getTitle());
 
-					graphics.flush();
-				}
-
-				poseStack.pushPose();
-				poseStack.translate(1.0f, 1.0f, 0.0f);
-				poseStack.scale(1.5f, 1.5f, 1.0f);
-
-				if (FabricLoader.getInstance().isModLoaded("canvas"))
-				{
-					if (alpha > 0)
-					{
-						poseStack.translate(0.0f, 0.0f, -2000.0f);
-						graphics.renderItem(displayInfo.getIcon(), 1, 1);
-					}
-				}
-				else
-				{
-					itemRenderer.renderItemModelIntoGUIWithAlpha(poseStack, displayInfo.getIcon(), 1, 1, alpha);
-				}
-				
-				poseStack.popPose();
-
-				if (!hasPlayedSound)
-				{
-					hasPlayedSound = true;
-
-					try
-					{
-						// Play sound based on frame type.
-						switch (displayInfo.getFrame())
+						// If the width of the advancement title is less than the full available width, display it normally.
+						if (titleWidth <= (220 / 1.5f))
 						{
-							case TASK:
-								if (AdvancementPlaquesConfig.INSTANCE.taskVolume.get() > 0.0)
-								{
-									mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.TASK_COMPLETE, 1.0f, AdvancementPlaquesConfig.INSTANCE.taskVolume.get().floatValue()));
-								}
-								break;
-							case GOAL:
-								if (AdvancementPlaquesConfig.INSTANCE.goalVolume.get() > 0.0)
-								{
-									mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.GOAL_COMPLETE, 1.0f, AdvancementPlaquesConfig.INSTANCE.goalVolume.get().floatValue()));
-								}
-								break;
-							default:
-							case CHALLENGE:
-								if (AdvancementPlaquesConfig.INSTANCE.challengeVolume.get() > 0.0)
-								{
-									mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, AdvancementPlaquesConfig.INSTANCE.challengeVolume.get().floatValue()));
-								}
-								break;
+							poseStack.pushPose();
+							poseStack.scale(1.5f, 1.5f, 1.0f);
+
+							// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
+							mc.font.drawInBatch(displayInfo.getTitle(), (int)(((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f)), 9, nameColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
+
+							poseStack.popPose();
+						}
+						// Otherwise, display it with a smaller (default) font.
+						else
+						{
+							// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
+							mc.font.drawInBatch(displayInfo.getTitle(), (int)((width() - titleWidth) / 2.0f + 15.0f), 15, nameColor, false, graphics.pose().last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
+						}
+
+						graphics.flush();
+					}
+
+					poseStack.pushPose();
+					poseStack.translate(1.0f, 1.0f, 0.0f);
+					poseStack.scale(1.5f, 1.5f, 1.0f);
+
+					itemRenderer.renderItemModelIntoGUIWithAlpha(poseStack, displayInfo.getIcon(), 1, 1, alpha);
+
+					poseStack.popPose();
+
+					if (!hasPlayedSound)
+					{
+						hasPlayedSound = true;
+
+						try
+						{
+							// Play sound based on frame type.
+							switch (displayInfo.getFrame())
+							{
+								case TASK:
+									if (AdvancementPlaquesConfig.INSTANCE.taskVolume.get() > 0.0)
+									{
+										mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.TASK_COMPLETE, 1.0f, AdvancementPlaquesConfig.INSTANCE.taskVolume.get().floatValue()));
+									}
+									break;
+								case GOAL:
+									if (AdvancementPlaquesConfig.INSTANCE.goalVolume.get() > 0.0)
+									{
+										mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.GOAL_COMPLETE, 1.0f, AdvancementPlaquesConfig.INSTANCE.goalVolume.get().floatValue()));
+									}
+									break;
+								default:
+								case CHALLENGE:
+									if (AdvancementPlaquesConfig.INSTANCE.challengeVolume.get() > 0.0)
+									{
+										mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, AdvancementPlaquesConfig.INSTANCE.challengeVolume.get().floatValue()));
+									}
+									break;
+							}
+						}
+						catch (NullPointerException e)
+						{
+							AdvancementPlaques.LOGGER.warn("Tried to play a custom sound for an advancement, but that sound was not registered! Install Advancement Plaques on the server or mute tasks and goals in the config file.");
 						}
 					}
-					catch (NullPointerException e)
+
+					// If Advancement Screenshot is installed and we're ready to take a screenshot, do it.
+					if (displayTime >= fadeInTime + fadeOutTime && alpha == 1.0f && !hasTakenScreenshot && FabricLoader.getInstance().isModLoaded("advancementscreenshot"))
 					{
-						AdvancementPlaques.LOGGER.warn("Tried to play a custom sound for an advancement, but that sound was not registered! Install Advancement Plaques on the server or mute tasks and goals in the config file.");
+						try
+						{
+							Class.forName("com.anthonyhilyard.advancementplaques.compat.AdvancementScreenshotHandler").getMethod("takeScreenshot").invoke(null);
+							hasTakenScreenshot = true;
+						}
+						catch (Exception e)
+						{
+							AdvancementPlaques.LOGGER.error(e);
+						}
 					}
 				}
-			}
 
-			if (displayTime < fadeInTime + fadeOutTime)
-			{
-				float alpha = 1.0f - ((float)(displayTime - fadeInTime) / fadeOutTime);
-				if (displayTime < fadeInTime)
+				if (displayTime < fadeInTime + fadeOutTime)
 				{
-					alpha = (float)displayTime / fadeInTime;
+					float alpha = 1.0f - ((float)(displayTime - fadeInTime) / fadeOutTime);
+					if (displayTime < fadeInTime)
+					{
+						alpha = (float)displayTime / fadeInTime;
+					}
+
+					RenderSystem.enableBlend();
+					RenderSystem.defaultBlendFunc();
+					graphics.setColor(1.0f, 1.0f, 1.0f, alpha);
+					poseStack.pushPose();
+					poseStack.translate(0.0f, 0.0f, 95.0f);
+					RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
+
+					if (displayInfo.getFrame() == FrameType.CHALLENGE)
+					{
+						GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, height() + 32, width() + 32, height() + 32, 512, 512);
+					}
+					else
+					{
+						GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, 0, width() + 32, height() + 32, 512, 512);
+					}
+					poseStack.popPose();
 				}
 
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
-				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-				poseStack.pushPose();
-				poseStack.translate(0.0f, 0.0f, 95.0f);
-				RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
-
-				if (displayInfo.getFrame() == FrameType.CHALLENGE)
-				{
-					GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, height() + 32, width() + 32, height() + 32, 512, 512);
-				}
-				else
-				{
-					GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, 0, width() + 32, height() + 32, 512, 512);
-				}
-				poseStack.popPose();
-				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-			}
+				graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+			});
 
 			return displayTime >= fadeInTime + fadeOutTime + duration ? Visibility.HIDE : Visibility.SHOW;
 		}
@@ -255,13 +258,13 @@ public class AdvancementPlaque
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean render(int screenWidth, int index, GuiGraphics graphics)
 	{
 		long currentTime = Util.getMillis();
 		if (animationTime == -1L)
 		{
 			animationTime = currentTime;
+			visibility.playSound(mc.getSoundManager());
 		}
 
 		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L)
@@ -275,13 +278,13 @@ public class AdvancementPlaque
 
 		if (AdvancementPlaquesConfig.INSTANCE.onTop.get())
 		{
-			poseStack.translate((float)(graphics.guiWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset.get(),
+			poseStack.translate((float)(graphics.guiWidth() - width()) / 2.0f,
 									 AdvancementPlaquesConfig.INSTANCE.distance.get(),
 									 800.0f + index);
 		}
 		else
 		{
-			poseStack.translate((float)(graphics.guiWidth() - width()) / 2.0f + AdvancementPlaquesConfig.INSTANCE.horizontalOffset.get(),
+			poseStack.translate((float)(graphics.guiWidth() - width()) / 2.0f,
 									 (float)(mc.getWindow().getGuiScaledHeight() - (height() + AdvancementPlaquesConfig.INSTANCE.distance.get())),
 									 800.0f + index);
 		}

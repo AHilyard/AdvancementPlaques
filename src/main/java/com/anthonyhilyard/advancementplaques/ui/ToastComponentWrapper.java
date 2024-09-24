@@ -3,37 +3,39 @@ package com.anthonyhilyard.advancementplaques.ui;
 import java.util.Arrays;
 import java.util.Deque;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.google.common.collect.Queues;
 
-import dev.banzetta.toastmanager.ManagedToastComponent;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
 
-public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComponent
+public class ToastComponentWrapper extends ToastComponent
 {
-	private final AdvancementPlaque[] plaques = new AdvancementPlaque[3];
+	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
+	private final ToastComponent wrapped;
 
-	public AdvancementPlaquesToastGuiWithToastManager(Minecraft mcIn)
+	public ToastComponentWrapper(Minecraft mcIn, ToastComponent wrapped)
 	{
-		super();
+		super(mcIn);
 		mc = mcIn;
+		this.wrapped = wrapped;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer, mc);
 	}
 
 	@Override
+	@SuppressWarnings("null")
 	public void addToast(Toast toastIn)
 	{
 		if (toastIn instanceof AdvancementToast)
@@ -47,21 +49,20 @@ public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComp
 			}
 		}
 
-		super.addToast(toastIn);
+		wrapped.addToast(toastIn);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(GuiGraphics graphics)
 	{
 		if (!mc.options.hideGui)
 		{
+			// Do toasts.
+			wrapped.render(graphics);
+
 			try
 			{
-				// Do toasts.
-				super.render(graphics);
-
-				// If Waila/Hwyla/Jade/WTHIT is installed, turn it off while the plaque is drawing if configured to do so.
+				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
 				boolean wailaLoaded = FabricLoader.getInstance().isModLoaded("waila");
 				boolean jadeLoaded = FabricLoader.getInstance().isModLoaded("jade");
 				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && (wailaLoaded || jadeLoaded))
@@ -99,26 +100,26 @@ public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComp
 						}
 					}
 				}
-
-				// Do plaques.
-				for (int i = 0; i < plaques.length; ++i)
-				{
-					AdvancementPlaque toastinstance = plaques[i];
-
-					if (toastinstance != null && toastinstance.render(graphics.guiWidth(), i, graphics))
-					{
-						plaques[i] = null;
-					}
-
-					if (plaques[i] == null && !advancementToastsQueue.isEmpty())
-					{
-						plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
-					}
-				}
 			}
 			catch (Exception e)
 			{
 				AdvancementPlaques.LOGGER.error(ExceptionUtils.getStackTrace(e));
+			}
+
+			// Do plaques.
+			for (int i = 0; i < plaques.length; ++i)
+			{
+				AdvancementPlaque toastinstance = plaques[i];
+
+				if (toastinstance != null && toastinstance.render(graphics.guiWidth(), i, graphics))
+				{
+					plaques[i] = null;
+				}
+
+				if (plaques[i] == null && !advancementToastsQueue.isEmpty())
+				{
+					plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
+				}
 			}
 		}
 	}
@@ -126,7 +127,7 @@ public class AdvancementPlaquesToastGuiWithToastManager extends ManagedToastComp
 	@Override
 	public void clear()
 	{
-		super.clear();
+		wrapped.clear();
 		Arrays.fill(plaques, null);
 		advancementToastsQueue.clear();
 	}

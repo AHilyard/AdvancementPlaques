@@ -12,11 +12,12 @@ import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.network.chat.TextColor;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.advancements.AdvancementHolder;
+
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -26,7 +27,6 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.fml.config.ModConfig;
 
-@SuppressWarnings("deprecation")
 public class AdvancementPlaquesConfig
 {
 	public static final ForgeConfigSpec SPEC;
@@ -126,9 +126,9 @@ public class AdvancementPlaquesConfig
 
 	}
 
-	private static boolean advancementEntryMatches(AdvancementHolder advancementHolder, String entry)
+	private static boolean advancementEntryMatches(Advancement advancement, String entry)
 	{
-		ResourceLocation advancementId = advancementHolder.id();
+		ResourceLocation advancementId = advancement.getId();
 
 		// Exact match.
 		if (advancementId.toString().equals(entry))
@@ -151,18 +151,18 @@ public class AdvancementPlaquesConfig
 		return false;
 	}
 
-	public static boolean showPlaqueForAdvancement(AdvancementHolder advancementHolder)
+	public static boolean showPlaqueForAdvancement(Advancement advancement)
 	{
 		// First check if the advancement is blacklisted.
 		for (String blacklistEntry : AdvancementPlaquesConfig.INSTANCE.blacklist.get())
 		{
-			if (advancementEntryMatches(advancementHolder, blacklistEntry))
+			if (advancementEntryMatches(advancement, blacklistEntry))
 			{
 				return false;
 			}
 		}
 
-		DisplayInfo displayInfo = advancementHolder.value().display().orElse(null);
+		DisplayInfo displayInfo = advancement.getDisplay();
 
 		// If this advancement doesn't have any display info for some reason, we can't show a plaque anyways.
 		if (displayInfo == null)
@@ -179,7 +179,7 @@ public class AdvancementPlaquesConfig
 			// Check the whitelist to see if the advancement should be shown anyways.
 			for (String whitelistEntry : AdvancementPlaquesConfig.INSTANCE.whitelist.get())
 			{
-				if (advancementEntryMatches(advancementHolder, whitelistEntry))
+				if (advancementEntryMatches(advancement, whitelistEntry))
 				{
 					return true;
 				}
