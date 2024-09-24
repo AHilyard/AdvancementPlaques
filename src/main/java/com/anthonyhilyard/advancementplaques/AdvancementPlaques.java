@@ -1,10 +1,8 @@
 package com.anthonyhilyard.advancementplaques;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -17,7 +15,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGui;
+import com.anthonyhilyard.advancementplaques.ui.ToastComponentWrapper;
 
 @Mod.EventBusSubscriber(modid = Loader.MODID, bus = Bus.MOD)
 public class AdvancementPlaques
@@ -43,30 +41,23 @@ public class AdvancementPlaques
 			@Override
 			public void run()
 			{
+				Minecraft minecraft = Minecraft.getInstance();
+
 				try
 				{
-					final ToastComponent newToastComponent;
-					if (ModList.get().isLoaded("toastcontrol"))
+					if (minecraft.toast != null)
 					{
-						newToastComponent = (ToastComponent) Class.forName("com.anthonyhilyard.advancementplaques.ui.AdvancementPlaquesToastGuiWithToastControl").getConstructor(Minecraft.class).newInstance(Minecraft.getInstance());
+						AdvancementPlaques.LOGGER.debug("Installing Advancement Plaques toast component.");
+						minecraft.toast = new ToastComponentWrapper(minecraft, minecraft.toast);
 					}
 					else
 					{
-						newToastComponent = new AdvancementPlaquesToastGui(Minecraft.getInstance());
-					}
-
-					if (newToastComponent != null)
-					{
-						Minecraft.getInstance().toast = newToastComponent;
-					}
-					else
-					{
-						LOGGER.debug("Unable to update Toast GUI, Advancement Plaques will not function properly. Maybe another mod is interfering?");
+						AdvancementPlaques.LOGGER.debug("Unable to update Toast GUI, Advancement Plaques will not function properly. Maybe another mod is interfering?");
 					}
 				}
 				catch (Exception e)
 				{
-					LOGGER.error(ExceptionUtils.getStackTrace(e));
+					AdvancementPlaques.LOGGER.error(ExceptionUtils.getStackTrace(e));
 				}
 			}
 		});

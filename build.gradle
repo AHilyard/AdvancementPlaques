@@ -48,6 +48,8 @@ dependencies {
 
 	implementation fg.deobf('curse.maven:jade-324717:4822578')
 	implementation fg.deobf('curse.maven:wthit-455982:4889927')
+
+	implementation fg.deobf('curse.maven:advancementscreenshot-414086:5573044')
 }
 
 jar {

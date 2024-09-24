@@ -1,4 +1,4 @@
- package com.anthonyhilyard.advancementplaques.ui;
+package com.anthonyhilyard.advancementplaques.ui;
 
 import java.util.Arrays;
 import java.util.Deque;
@@ -15,19 +15,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraftforge.fml.ModList;
 
-public class AdvancementPlaquesToastGuiWithToastControl extends dev.shadowsoffire.toastcontrol.BetterToastComponent
+public class ToastComponentWrapper extends ToastComponent
 {
-	private final AdvancementPlaque[] plaques = new AdvancementPlaque[3];
+	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
+	private final ToastComponent wrapped;
 
-	public AdvancementPlaquesToastGuiWithToastControl(Minecraft mcIn)
+	public ToastComponentWrapper(Minecraft mcIn, ToastComponent wrapped)
 	{
-		super();
+		super(mcIn);
 		mc = mcIn;
+		this.wrapped = wrapped;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.getItemColors(), mc.getItemRenderer().getBlockEntityRenderer(), mc);
 	}
 
@@ -46,7 +49,7 @@ public class AdvancementPlaquesToastGuiWithToastControl extends dev.shadowsoffir
 			}
 		}
 
-		super.addToast(toastIn);
+		wrapped.addToast(toastIn);
 	}
 
 	@Override
@@ -54,12 +57,12 @@ public class AdvancementPlaquesToastGuiWithToastControl extends dev.shadowsoffir
 	{
 		if (!mc.options.hideGui)
 		{
+			// Do toasts.
+			wrapped.render(graphics);
+
 			try
 			{
-				// Do toasts.
-				super.render(graphics);
-
-				// If Waila/Hwyla/Jade/WTHIT is installed, turn it off while the plaque is drawing if configured to do so.
+				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.
 				boolean wailaLoaded = ModList.get().isLoaded("waila");
 				boolean jadeLoaded = ModList.get().isLoaded("jade");
 				if (AdvancementPlaquesConfig.INSTANCE.hideWaila.get() && (wailaLoaded || jadeLoaded))
@@ -97,26 +100,26 @@ public class AdvancementPlaquesToastGuiWithToastControl extends dev.shadowsoffir
 						}
 					}
 				}
-
-				// Do plaques.
-				for (int i = 0; i < plaques.length; ++i)
-				{
-					AdvancementPlaque toastinstance = plaques[i];
-
-					if (toastinstance != null && toastinstance.render(graphics.guiWidth(), i, graphics))
-					{
-						plaques[i] = null;
-					}
-
-					if (plaques[i] == null && !advancementToastsQueue.isEmpty())
-					{
-						plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
-					}
-				}
 			}
 			catch (Exception e)
 			{
 				AdvancementPlaques.LOGGER.error(ExceptionUtils.getStackTrace(e));
+			}
+
+			// Do plaques.
+			for (int i = 0; i < plaques.length; ++i)
+			{
+				AdvancementPlaque toastinstance = plaques[i];
+
+				if (toastinstance != null && toastinstance.render(graphics.guiWidth(), i, graphics))
+				{
+					plaques[i] = null;
+				}
+
+				if (plaques[i] == null && !advancementToastsQueue.isEmpty())
+				{
+					plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
+				}
 			}
 		}
 	}
@@ -124,7 +127,7 @@ public class AdvancementPlaquesToastGuiWithToastControl extends dev.shadowsoffir
 	@Override
 	public void clear()
 	{
-		super.clear();
+		wrapped.clear();
 		Arrays.fill(plaques, null);
 		advancementToastsQueue.clear();
 	}
