@@ -2,6 +2,7 @@ package com.anthonyhilyard.advancementplaques.ui;
 
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -25,6 +26,7 @@ public class ToastComponentWrapper extends ToastComponent
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 	private final ToastComponent wrapped;
+	private final ReentrantLock wrapLock = new ReentrantLock(true);
 
 	public ToastComponentWrapper(Minecraft mcIn, ToastComponent wrapped)
 	{
@@ -32,6 +34,16 @@ public class ToastComponentWrapper extends ToastComponent
 		mc = mcIn;
 		this.wrapped = wrapped;
 		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer, mc);
+	}
+
+	@Override
+	public <T extends Toast> T getToast(Class<? extends T> class_, Object object)
+	{
+		wrapLock.lock();
+		T toast = wrapped.getToast(class_, object);
+		wrapLock.unlock();
+
+		return toast;
 	}
 
 	@Override
@@ -49,7 +61,9 @@ public class ToastComponentWrapper extends ToastComponent
 			}
 		}
 
+		wrapLock.lock();
 		wrapped.addToast(toastIn);
+		wrapLock.unlock();
 	}
 
 	@Override
@@ -58,7 +72,9 @@ public class ToastComponentWrapper extends ToastComponent
 		if (!mc.options.hideGui)
 		{
 			// Do toasts.
+			wrapLock.lock();
 			wrapped.render(graphics);
+			wrapLock.unlock();
 
 			try
 			{
@@ -127,7 +143,10 @@ public class ToastComponentWrapper extends ToastComponent
 	@Override
 	public void clear()
 	{
+		wrapLock.lock();
 		wrapped.clear();
+		wrapLock.unlock();
+
 		Arrays.fill(plaques, null);
 		advancementToastsQueue.clear();
 	}
