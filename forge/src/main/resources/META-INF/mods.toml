@@ -22,7 +22,7 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="minecraft"
 	mandatory=true
-	versionRange="[1.21,)"
+	versionRange="[1.21.1]"
 	ordering="NONE"
 	side="BOTH"
 

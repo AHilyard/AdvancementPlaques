@@ -9,8 +9,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(AdvancementPlaques.MODID)
 public final class AdvancementPlaquesForge
 {
-	public AdvancementPlaquesForge()
+	public AdvancementPlaquesForge(ModLoadingContext context)
 	{
-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "ANY", (remote, isServer) -> true));
+		context.registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "ANY", (remote, isServer) -> true));
 	}
 }

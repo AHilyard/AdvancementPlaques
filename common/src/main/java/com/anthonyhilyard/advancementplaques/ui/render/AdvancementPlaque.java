@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.Util;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,7 @@ import net.minecraft.client.gui.components.toasts.Toast.Visibility;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 
@@ -192,26 +194,58 @@ public class AdvancementPlaque
 
 						try
 						{
-							// Play sound based on frame type.
+							// Play sound based on advancement type.
+							SoundEvent sound = null;
+
+							// If the Aether is loaded and has a custom sound override for this advancement, grab it.
+							if (Services.getPlatformHelper().isModLoaded("aether"))
+							{
+								try
+								{
+									sound = (SoundEvent)Class.forName("com.anthonyhilyard.advancementplaques.compat.AetherHandler").getMethod("getSoundOverride", AdvancementHolder.class).invoke(null, toast.advancement);
+								}
+								catch (Exception e)
+								{
+									AdvancementPlaques.LOGGER.error(e);
+								}
+							}
+
+							if (sound == null)
+							{
+								switch (displayInfo.getType())
+								{
+									case TASK:
+										sound = AdvancementPlaques.TASK_COMPLETE;
+										break;
+									case GOAL:
+										sound = AdvancementPlaques.GOAL_COMPLETE;
+										break;
+									default:
+									case CHALLENGE:
+										sound = SoundEvents.UI_TOAST_CHALLENGE_COMPLETE;
+										break;
+								}
+							}
+
 							switch (displayInfo.getType())
 							{
 								case TASK:
 									if (AdvancementPlaquesConfig.getInstance().taskVolume.get() > 0.0)
 									{
-										mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.TASK_COMPLETE, 1.0f, AdvancementPlaquesConfig.getInstance().taskVolume.get().floatValue()));
+										mc.getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0f, AdvancementPlaquesConfig.getInstance().taskVolume.get().floatValue()));
 									}
 									break;
 								case GOAL:
 									if (AdvancementPlaquesConfig.getInstance().goalVolume.get() > 0.0)
 									{
-										mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.GOAL_COMPLETE, 1.0f, AdvancementPlaquesConfig.getInstance().goalVolume.get().floatValue()));
+										mc.getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0f, AdvancementPlaquesConfig.getInstance().goalVolume.get().floatValue()));
 									}
 									break;
 								default:
 								case CHALLENGE:
 									if (AdvancementPlaquesConfig.getInstance().challengeVolume.get() > 0.0)
 									{
-										mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, AdvancementPlaquesConfig.getInstance().challengeVolume.get().floatValue()));
+										mc.getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0f, AdvancementPlaquesConfig.getInstance().challengeVolume.get().floatValue()));
 									}
 									break;
 							}
