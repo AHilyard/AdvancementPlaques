@@ -15,23 +15,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 
-public class ToastComponentWrapper extends ToastComponent
+public class ToastManagerWrapper extends ToastManager
 {
 	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
-	private final ToastComponent wrapped;
+	private final ToastManager wrapped;
 	private final ReentrantLock wrapLock = new ReentrantLock(true);
 
-	public ToastComponentWrapper(Minecraft mcIn, ToastComponent wrapped)
+	public ToastManagerWrapper(Minecraft mcIn, ToastManager wrapped)
 	{
 		super(mcIn);
 		mc = mcIn;
 		this.wrapped = wrapped;
-		itemRenderer = new CustomItemRenderer(mc.getTextureManager(), mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer, mc);
+		itemRenderer = new CustomItemRenderer(mc, mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer);
 	}
 
 	@Override

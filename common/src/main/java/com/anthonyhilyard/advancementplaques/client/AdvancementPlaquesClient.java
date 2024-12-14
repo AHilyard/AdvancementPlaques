@@ -3,7 +3,7 @@ package com.anthonyhilyard.advancementplaques.client;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
-import com.anthonyhilyard.advancementplaques.ui.ToastComponentWrapper;
+import com.anthonyhilyard.advancementplaques.ui.ToastManagerWrapper;
 
 import net.minecraft.client.Minecraft;
 
@@ -13,10 +13,10 @@ public class AdvancementPlaquesClient
 	{
 		try
 		{
-			if (minecraft.toast != null)
+			if (minecraft.toastManager != null)
 			{
 				AdvancementPlaques.LOGGER.debug("Installing Advancement Plaques toast component.");
-				minecraft.toast = new ToastComponentWrapper(minecraft, minecraft.toast);
+				minecraft.toastManager = new ToastManagerWrapper(minecraft, minecraft.toastManager);
 			}
 			else
 			{

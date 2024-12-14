@@ -4,7 +4,6 @@ import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.anthonyhilyard.iceberg.services.Services;
-import com.anthonyhilyard.iceberg.util.GuiHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -20,6 +19,7 @@ import net.minecraft.client.gui.components.toasts.Toast.Visibility;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 
@@ -64,7 +64,6 @@ public class AdvancementPlaque
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
 	}
 
-	@SuppressWarnings("deprecation")
 	private Visibility drawPlaque(GuiGraphics graphics, long displayTime)
 	{
 		// Don't show plaques while paused or loading.
@@ -101,7 +100,7 @@ public class AdvancementPlaque
 					break;
 			}
 
-			graphics.drawManaged(() ->
+			graphics.drawSpecial(bufferSource ->
 			{
 				if (displayTime >= fadeInTime)
 				{
@@ -121,8 +120,7 @@ public class AdvancementPlaque
 					int nameColor  = AdvancementPlaquesConfig.getInstance().getNameColor(alpha).getValue();
 
 					RenderSystem.enableBlend();
-					graphics.setColor(1.0f, 1.0f, 1.0f, alpha);
-					RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUES);
+
 					int frameOffset = 0;
 					if (displayInfo.getType() == AdvancementType.GOAL)
 					{
@@ -133,7 +131,9 @@ public class AdvancementPlaque
 						frameOffset = 2;
 					}
 
-					GuiHelper.blit(poseStack, -1, -1, width(), height(), 0, height() * frameOffset, width(), height(), 256, 256);
+					int color = 0xFFFFFF | (int)(alpha * 255.0f) << 24;
+
+					graphics.blit(RenderType::guiTextured, AdvancementPlaques.TEXTURE_PLAQUES, -1, -1, 0, height() * frameOffset, width(), height(), width(), height(), 256, 256, color);
 
 					// Only bother drawing text if alpha is greater than 0.1.
 					if (alpha > 0.1f)
@@ -142,7 +142,7 @@ public class AdvancementPlaque
 						int typeWidth = mc.font.width(displayInfo.getType().getDisplayName());
 
 						// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
-						mc.font.drawInBatch(displayInfo.getType().getDisplayName(), (int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false, poseStack.last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
+						mc.font.drawInBatch(displayInfo.getType().getDisplayName(), (int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false, poseStack.last().pose(), bufferSource, DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
 						graphics.flush();
 
 						int titleWidth = mc.font.width(displayInfo.getTitle());
@@ -154,7 +154,7 @@ public class AdvancementPlaque
 							poseStack.scale(1.5f, 1.5f, 1.0f);
 
 							// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
-							mc.font.drawInBatch(displayInfo.getTitle(), (int)(((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f)), 9, nameColor, false, poseStack.last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
+							mc.font.drawInBatch(displayInfo.getTitle(), (int)(((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f)), 9, nameColor, false, poseStack.last().pose(), bufferSource, DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
 
 							poseStack.popPose();
 						}
@@ -162,7 +162,7 @@ public class AdvancementPlaque
 						else
 						{
 							// GuiGraphics.drawString doesn't support alpha, so draw the string manually.
-							mc.font.drawInBatch(displayInfo.getTitle(), (int)((width() - titleWidth) / 2.0f + 15.0f), 15, nameColor, false, poseStack.last().pose(), graphics.bufferSource(), DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
+							mc.font.drawInBatch(displayInfo.getTitle(), (int)((width() - titleWidth) / 2.0f + 15.0f), 15, nameColor, false, poseStack.last().pose(), bufferSource, DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
 						}
 						graphics.flush();
 					}
@@ -245,25 +245,26 @@ public class AdvancementPlaque
 						alpha = (float)displayTime / fadeInTime;
 					}
 
+					int color = 0xFFFFFF | (int)(alpha * 255.0f) << 24;
+
 					RenderSystem.enableBlend();
 					RenderSystem.defaultBlendFunc();
-					graphics.setColor(1.0f, 1.0f, 1.0f, alpha);
 					poseStack.pushPose();
 					poseStack.translate(0.0f, 0.0f, 95.0f);
-					RenderSystem.setShaderTexture(0, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS);
 
 					if (displayInfo.getType() == AdvancementType.CHALLENGE)
 					{
-						GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, height() + 32, width() + 32, height() + 32, 512, 512);
+						graphics.blit(RenderType::guiTextured, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS, -16, -16, 0, height() + 32, width() + 32, height() + 32, width() + 32, height() + 32, 512, 512, color);
+
 					}
 					else
 					{
-						GuiHelper.blit(poseStack, -16, -16, width() + 32, height() + 32, 0, 0, width() + 32, height() + 32, 512, 512);
+						graphics.blit(RenderType::guiTextured, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS, -16, -16, 0, 0, width() + 32, height() + 32, width() + 32, height() + 32, 512, 512, color);
 					}
 					poseStack.popPose();
 				}
 
-				graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+				RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 			});
 
 			return displayTime >= fadeInTime + fadeOutTime + duration ? Visibility.HIDE : Visibility.SHOW;
