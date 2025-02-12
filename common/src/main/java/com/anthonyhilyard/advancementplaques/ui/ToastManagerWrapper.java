@@ -7,7 +7,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
 import com.anthonyhilyard.advancementplaques.ui.render.AdvancementPlaque;
-import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.anthonyhilyard.iceberg.services.Services;
 import com.google.common.collect.Queues;
 
@@ -22,7 +21,6 @@ public class ToastManagerWrapper extends ToastManager
 	private final AdvancementPlaque[] plaques = new AdvancementPlaque[1];
 	private final Deque<AdvancementToast> advancementToastsQueue = Queues.newArrayDeque();
 	private final Minecraft mc;
-	private final CustomItemRenderer itemRenderer;
 	private final ToastManager wrapped;
 	private final ReentrantLock wrapLock = new ReentrantLock(true);
 
@@ -31,7 +29,6 @@ public class ToastManagerWrapper extends ToastManager
 		super(mcIn);
 		mc = mcIn;
 		this.wrapped = wrapped;
-		itemRenderer = new CustomItemRenderer(mc, mc.getModelManager(), mc.itemColors, mc.getItemRenderer().blockEntityRenderer);
 	}
 
 	@Override
@@ -132,7 +129,7 @@ public class ToastManagerWrapper extends ToastManager
 
 				if (plaques[i] == null && !advancementToastsQueue.isEmpty())
 				{
-					plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc, itemRenderer);
+					plaques[i] = new AdvancementPlaque(advancementToastsQueue.removeFirst(), mc);
 				}
 			}
 		}

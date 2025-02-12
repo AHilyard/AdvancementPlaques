@@ -2,6 +2,7 @@ package com.anthonyhilyard.advancementplaques.ui.render;
 
 import com.anthonyhilyard.advancementplaques.AdvancementPlaques;
 import com.anthonyhilyard.advancementplaques.config.AdvancementPlaquesConfig;
+import com.anthonyhilyard.advancementplaques.services.ModServices;
 import com.anthonyhilyard.iceberg.renderer.CustomItemRenderer;
 import com.anthonyhilyard.iceberg.services.Services;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -35,11 +36,11 @@ public class AdvancementPlaque
 	private Minecraft mc;
 	private CustomItemRenderer itemRenderer;
 
-	public AdvancementPlaque(AdvancementToast toastIn, Minecraft mcIn, CustomItemRenderer itemRendererIn)
+	public AdvancementPlaque(AdvancementToast toastIn, Minecraft mcIn)
 	{
 		toast = toastIn;
 		mc = mcIn;
-		itemRenderer = itemRendererIn;
+		itemRenderer = CustomItemRenderer.getInstance();
 	}
 
 	public AdvancementToast getToast()
@@ -223,17 +224,10 @@ public class AdvancementPlaque
 					}
 
 					// If Advancement Screenshot is installed and we're ready to take a screenshot, do it.
-					if (displayTime >= fadeInTime + fadeOutTime && alpha == 1.0f && !hasTakenScreenshot && Services.getPlatformHelper().isModLoaded("advancementscreenshot"))
+					if (displayTime >= fadeInTime + fadeOutTime && alpha > 0.9f && !hasTakenScreenshot && Services.getPlatformHelper().isModLoaded("advancementscreenshot"))
 					{
-						try
-						{
-							Class.forName("com.anthonyhilyard.advancementplaques.compat.AdvancementScreenshotHandler").getMethod("takeScreenshot").invoke(null);
-							hasTakenScreenshot = true;
-						}
-						catch (Exception e)
-						{
-							AdvancementPlaques.LOGGER.error(e);
-						}
+						ModServices.getAdvancementScreenshotHandler().takeScreenshot();
+						hasTakenScreenshot = true;
 					}
 				}
 

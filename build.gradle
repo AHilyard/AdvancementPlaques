@@ -72,6 +72,8 @@ subprojects {
 	dependencies {
 		minecraft "net.minecraft:minecraft:$rootProject.minecraftVersion"
 		mappings loom.officialMojangMappings()
+
+		modImplementation "curse.maven:advancementscreenshot-414086:5426348"
 	}
 
 	java {

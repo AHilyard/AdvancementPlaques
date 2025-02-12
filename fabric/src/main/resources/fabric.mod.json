@@ -28,11 +28,11 @@
 	"accessWidener": "advancementplaques.accesswidener",
 
 	"depends": {
-		"fabricloader": ">=0.15.10",
+		"fabricloader": ">=0.16.0",
 		"fabric": "*",
-		"minecraft": ">=1.21.0",
+		"minecraft": ">=1.21.4",
 		"java": ">=21",
-		"iceberg": ">=1.2.2"
+		"iceberg": ">=1.2.13"
 	},
 	"suggests": {
 		"waila": "*",

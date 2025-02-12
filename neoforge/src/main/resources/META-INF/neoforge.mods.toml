@@ -22,14 +22,14 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="minecraft"
 	type="required"
-	versionRange="[1.21,)"
+	versionRange="[1.21.4,)"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="iceberg"
 	type="required"
-	versionRange="[1.2.2,)"
+	versionRange="[1.2.13,)"
 	ordering="AFTER"
 	side="BOTH"
 
