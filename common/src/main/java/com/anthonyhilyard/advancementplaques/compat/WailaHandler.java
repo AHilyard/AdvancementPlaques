@@ -7,8 +7,10 @@ public class WailaHandler
 	private static boolean previousState = true;
 	private static boolean disabled = false;
 
+	//TODO WTHIT changed its config a lot
 	public static void disableWaila()
 	{
+		/*
 		boolean currentState = Waila.CONFIG.get().getGeneral().isDisplayTooltip();
 		if (!disabled || currentState)
 		{
@@ -16,15 +18,18 @@ public class WailaHandler
 			Waila.CONFIG.get().getGeneral().setDisplayTooltip(false);
 			disabled = true;
 		}
+		*/
 	}
 
 	public static void enableWaila()
 	{
+		/*
 		if (disabled)
 		{
 			Waila.CONFIG.get().getGeneral().setDisplayTooltip(previousState);
 			disabled = false;
 		}
+		*/
 	}
 	
 }

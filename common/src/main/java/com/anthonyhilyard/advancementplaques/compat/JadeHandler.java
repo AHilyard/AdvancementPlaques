@@ -1,7 +1,7 @@
 package com.anthonyhilyard.advancementplaques.compat;
 
 import snownee.jade.Jade;
-import snownee.jade.impl.config.WailaConfig.ConfigGeneral;
+import snownee.jade.impl.config.WailaConfig;
 
 public class JadeHandler
 {
@@ -10,7 +10,7 @@ public class JadeHandler
 
 	public static void disableJade()
 	{
-		ConfigGeneral Config = Jade.CONFIG.get().getGeneral();
+		WailaConfig.General Config = Jade.config().general();
 		boolean currentState = Config.shouldDisplayTooltip();
 		if (!disabled || currentState)
 		{
@@ -22,7 +22,7 @@ public class JadeHandler
 
 	public static void enableJade()
 	{
-		ConfigGeneral Config = Jade.CONFIG.get().getGeneral();
+		WailaConfig.General Config = Jade.config().general();
 		if (disabled)
 		{
 			Config.setDisplayTooltip(previousState);

@@ -13,7 +13,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class AdvancementPlaquesConfig extends IcebergConfig<AdvancementPlaquesConfig>
 {
@@ -105,7 +105,7 @@ public final class AdvancementPlaquesConfig extends IcebergConfig<AdvancementPla
 
 	private static boolean advancementEntryMatches(AdvancementHolder advancementHolder, String entry)
 	{
-		ResourceLocation advancementId = advancementHolder.id();
+		Identifier advancementId = advancementHolder.id();
 
 		// Exact match.
 		if (advancementId.toString().equals(entry))

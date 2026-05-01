@@ -26,7 +26,7 @@ public class ToastManagerWrapper extends ToastManager
 
 	public ToastManagerWrapper(Minecraft mcIn, ToastManager wrapped)
 	{
-		super(mcIn);
+		super(mcIn, mcIn.options);
 		mc = mcIn;
 		this.wrapped = wrapped;
 	}
