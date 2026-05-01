@@ -29,10 +29,10 @@
 
 	"depends": {
 		"fabricloader": ">=0.16.0",
-		"fabric": "*",
-		"minecraft": ">=1.21.4",
+		"fabric-api": "*",
+		"minecraft": "=1.21.11",
 		"java": ">=21",
-		"iceberg": ">=1.2.13"
+		"iceberg": ">=1.4.0"
 	},
 	"suggests": {
 		"waila": "*",

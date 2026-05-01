@@ -22,21 +22,21 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="minecraft"
 	type="required"
-	versionRange="[1.21.4,)"
+	versionRange="[1.21.11]"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="iceberg"
 	type="required"
-	versionRange="[1.2.13,)"
+	versionRange="[1.4.0,)"
 	ordering="AFTER"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="prism"
 	type="optional"
-	versionRange="[1.0.8,)"
+	versionRange="[1.1.0,)"
 	ordering="AFTER"
 	side="BOTH"
 
