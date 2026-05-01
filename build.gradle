@@ -1,6 +1,6 @@
 plugins {
 	id 'io.github.goooler.shadow' version '8.1.7' apply false
-	id 'dev.architectury.loom' version '1.14-SNAPSHOT' apply false
+	id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
 	id 'architectury-plugin' version '3.4-SNAPSHOT'
 }
 
@@ -34,7 +34,7 @@ subprojects {
 		minecraft "net.minecraft:minecraft:$rootProject.minecraftVersion"
 		mappings loom.officialMojangMappings()
 
-		modImplementation "curse.maven:advancementscreenshot-414086:5426348"
+		modCompileOnly "curse.maven:advancementscreenshot-414086:7318952"
 	}
 
 	java {
