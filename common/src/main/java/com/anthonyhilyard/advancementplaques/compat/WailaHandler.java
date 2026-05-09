@@ -1,35 +1,29 @@
 package com.anthonyhilyard.advancementplaques.compat;
 
-import mcp.mobius.waila.Waila;
+import mcp.mobius.waila.WailaClient;
 
 public class WailaHandler
 {
 	private static boolean previousState = true;
 	private static boolean disabled = false;
 
-	//TODO WTHIT changed its config a lot
 	public static void disableWaila()
 	{
-		/*
-		boolean currentState = Waila.CONFIG.get().getGeneral().isDisplayTooltip();
+		boolean currentState = WailaClient.CONFIG.get().getGeneral().isDisplayTooltip();
 		if (!disabled || currentState)
 		{
 			previousState = currentState;
-			Waila.CONFIG.get().getGeneral().setDisplayTooltip(false);
+			WailaClient.CONFIG.get().getGeneral().setDisplayTooltip(false);
 			disabled = true;
 		}
-		*/
 	}
 
 	public static void enableWaila()
 	{
-		/*
 		if (disabled)
 		{
-			Waila.CONFIG.get().getGeneral().setDisplayTooltip(previousState);
+			WailaClient.CONFIG.get().getGeneral().setDisplayTooltip(previousState);
 			disabled = false;
 		}
-		*/
 	}
-	
 }
