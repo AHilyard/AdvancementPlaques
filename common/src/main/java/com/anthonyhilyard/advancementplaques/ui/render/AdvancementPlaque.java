@@ -21,7 +21,8 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
 import org.joml.Matrix3x2fStack;
 
-public class AdvancementPlaque {
+public class AdvancementPlaque
+{
 	private final AdvancementToast toast;
 	private long animationTime = -1L;
 	private long visibleTime = -1L;
@@ -31,7 +32,8 @@ public class AdvancementPlaque {
 	private final Minecraft mc;
 	private final CustomItemRenderer itemRenderer;
 
-	public AdvancementPlaque(AdvancementToast toastIn, Minecraft mcIn) {
+	public AdvancementPlaque(AdvancementToast toastIn, Minecraft mcIn)
+	{
 		this.toast = toastIn;
 		this.mc = mcIn;
 		this.itemRenderer = new CustomItemRenderer(mcIn);
@@ -40,8 +42,10 @@ public class AdvancementPlaque {
 	public int width() { return 256; }
 	public int height() { return 32; }
 
-	private Visibility drawPlaque(GuiGraphics graphics, long displayTime) {
-		if (mc.screen instanceof PauseScreen || mc.screen instanceof LevelLoadingScreen) {
+	private Visibility drawPlaque(GuiGraphics graphics, long displayTime)
+	{
+		if (mc.screen instanceof PauseScreen || mc.screen instanceof LevelLoadingScreen)
+		{
 			return Visibility.SHOW;
 		}
 
@@ -51,7 +55,8 @@ public class AdvancementPlaque {
 		float fadeInTime, fadeOutTime, duration;
 		var config = AdvancementPlaquesConfig.getInstance();
 
-		switch (displayInfo.getType()) {
+		switch (displayInfo.getType())
+		{
 			case GOAL -> {
 				fadeInTime = (float) (config.goalEffectFadeInTime.get() * 1000.0);
 				fadeOutTime = (float) (config.goalEffectFadeOutTime.get() * 1000.0);
@@ -69,9 +74,11 @@ public class AdvancementPlaque {
 			}
 		}
 
-		if (displayTime >= fadeInTime) {
+		if (displayTime >= fadeInTime)
+		{
 			float alpha = 1.0f;
-			if (displayTime > duration) {
+			if (displayTime > duration)
+			{
 				alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float) displayTime - duration) / 1000.0f));
 				if (Services.getPlatformHelper().isModLoaded("canvas")) alpha = 0;
 			}
@@ -80,7 +87,8 @@ public class AdvancementPlaque {
 			int nameColor = config.getNameColor(alpha).getValue();
 			int plaqueColor = ARGB.white(alpha);
 
-			int frameOffset = switch (displayInfo.getType()) {
+			int frameOffset = switch (displayInfo.getType())
+			{
 				case GOAL -> 1;
 				case CHALLENGE -> 2;
 				default -> 0;
@@ -91,7 +99,8 @@ public class AdvancementPlaque {
 					-1, -1, 0, height() * frameOffset, width(), height(),
 					width(), height(), 256, 256, plaqueColor);
 
-			if (alpha > 0.1f) {
+			if (alpha > 0.1f)
+			{
 				// Line 1
 				var typeText = displayInfo.getType().getDisplayName();
 				int typeWidth = mc.font.width(typeText);
@@ -102,13 +111,16 @@ public class AdvancementPlaque {
 				var titleText = displayInfo.getTitle();
 				int titleWidth = mc.font.width(titleText);
 
-				if (titleWidth <= (220 / 1.5f)) {
+				if (titleWidth <= (220 / 1.5f))
+				{
 					graphics.pose().pushMatrix();
 					graphics.pose().scale(1.5f, 1.5f);
 					graphics.drawString(mc.font, titleText.getVisualOrderText(),
 							(int)(((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f)), 9, nameColor, false);
 					graphics.pose().popMatrix();
-				} else {
+				}
+				else
+				{
 					graphics.drawString(mc.font, titleText.getVisualOrderText(),
 							(int)((width() - titleWidth) / 2.0f + 15.0f), 15, nameColor, false);
 				}
@@ -127,16 +139,20 @@ public class AdvancementPlaque {
 		}
 
 		// Effects
-		if (displayTime < fadeInTime + fadeOutTime) {
+		if (displayTime < fadeInTime + fadeOutTime)
+		{
 			float effectAlpha = (displayTime < fadeInTime) ? (float) displayTime / fadeInTime : 1.0f - ((float) (displayTime - fadeInTime) / fadeOutTime);
 			int effectColor = ARGB.white(effectAlpha);
 
 			graphics.pose().pushMatrix();
-			if (displayInfo.getType() == AdvancementType.CHALLENGE) {
+			if (displayInfo.getType() == AdvancementType.CHALLENGE)
+			{
 				graphics.blit(RenderPipelines.GUI_TEXTURED, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS,
 						-16, -16, 0, height() + 32, width() + 32, height() + 32,
 						width() + 32, height() + 32, 512, 512, effectColor);
-			} else {
+			}
+			else
+			{
 				graphics.blit(RenderPipelines.GUI_TEXTURED, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS,
 						-16, -16, 0, 0, width() + 32, height() + 32,
 						width() + 32, height() + 32, 512, 512, effectColor);
@@ -148,12 +164,16 @@ public class AdvancementPlaque {
 	}
 
 
-	private void handleSounds(DisplayInfo displayInfo) {
-		if (!hasPlayedSound) {
+	private void handleSounds(DisplayInfo displayInfo)
+	{
+		if (!hasPlayedSound)
+		{
 			hasPlayedSound = true;
 			var config = AdvancementPlaquesConfig.getInstance();
-			try {
-				switch (displayInfo.getType()) {
+			try
+			{
+				switch (displayInfo.getType())
+				{
 					case TASK -> {
 						if (config.taskVolume.get() > 0.0)
 							mc.getSoundManager().play(SimpleSoundInstance.forUI(AdvancementPlaques.TASK_COMPLETE, 1.0f, config.taskVolume.get().floatValue()));
@@ -171,14 +191,17 @@ public class AdvancementPlaque {
 		}
 	}
 
-	private void handleScreenshots(long displayTime, float fadeIn, float fadeOut, float alpha, DisplayInfo displayInfo) {
-		if (displayTime >= fadeIn + fadeOut && alpha > 0.9f && !hasTakenScreenshot && Services.getPlatformHelper().isModLoaded("advancementscreenshot")) {
+	private void handleScreenshots(long displayTime, float fadeIn, float fadeOut, float alpha, DisplayInfo displayInfo)
+	{
+		if (displayTime >= fadeIn + fadeOut && alpha > 0.9f && !hasTakenScreenshot && Services.getPlatformHelper().isModLoaded("advancementscreenshot"))
+		{
 			ModServices.getAdvancementScreenshotHandler().takeScreenshot(displayInfo.getTitle());
 			hasTakenScreenshot = true;
 		}
 	}
 
-	public boolean render(int screenWidth, int index, GuiGraphics graphics) {
+	public boolean render(int screenWidth, int index, GuiGraphics graphics)
+	{
 		long currentTime = Util.getMillis();
 		if (animationTime == -1L) animationTime = currentTime;
 		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L) visibleTime = currentTime;
@@ -197,21 +220,24 @@ public class AdvancementPlaque {
 
 		poseStack.popMatrix();
 
-		if (newVisibility != visibility) {
+		if (newVisibility != visibility)
+		{
 			animationTime = currentTime - (long)((1.0f - getVisibility(currentTime)) * 200.0f);
 			visibility = newVisibility;
 		}
 
 		//Close item renderer
 		boolean isFinished = visibility == Visibility.HIDE && currentTime - animationTime > 200L;
-		if (isFinished) {
+		if (isFinished)
+		{
 			this.itemRenderer.close();
 		}
 
 		return isFinished;
 	}
 
-	private float getVisibility(long currentTime) {
+	private float getVisibility(long currentTime)
+	{
 		float f = Mth.clamp((float)(currentTime - animationTime) / 200.0f, 0.0f, 1.0f);
 		f = f * f;
 		return visibility == Visibility.HIDE ? 1.0f - f : f;
