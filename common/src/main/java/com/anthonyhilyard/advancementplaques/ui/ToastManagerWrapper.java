@@ -32,7 +32,8 @@ public class ToastManagerWrapper extends ToastManager
 	}
 
 	@Override
-	public void update() {
+	public void update()
+	{
 		wrapLock.lock();
 		wrapped.update();
 		wrapLock.unlock();
