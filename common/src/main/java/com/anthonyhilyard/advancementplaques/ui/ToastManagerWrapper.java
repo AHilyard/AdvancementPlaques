@@ -32,6 +32,13 @@ public class ToastManagerWrapper extends ToastManager
 	}
 
 	@Override
+	public void update() {
+		wrapLock.lock();
+		wrapped.update();
+		wrapLock.unlock();
+	}
+
+	@Override
 	public <T extends Toast> T getToast(Class<? extends T> class_, Object object)
 	{
 		wrapLock.lock();
