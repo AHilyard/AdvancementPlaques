@@ -30,13 +30,16 @@ public class AdvancementPlaque
 	private boolean hasTakenScreenshot = false;
 	private Visibility visibility = Visibility.SHOW;
 	private final Minecraft mc;
-	private final CustomItemRenderer itemRenderer;
+	private static CustomItemRenderer itemRenderer;
 
 	public AdvancementPlaque(AdvancementToast toastIn, Minecraft mcIn)
 	{
 		this.toast = toastIn;
 		this.mc = mcIn;
-		this.itemRenderer = new CustomItemRenderer(mcIn);
+		if (itemRenderer == null)
+		{
+			itemRenderer = new CustomItemRenderer(mcIn);
+		}
 	}
 
 	public int width() { return 256; }
@@ -226,14 +229,7 @@ public class AdvancementPlaque
 			visibility = newVisibility;
 		}
 
-		// Close the item renderer.
-		boolean isFinished = visibility == Visibility.HIDE && currentTime - animationTime > 200L;
-		if (isFinished)
-		{
-			this.itemRenderer.close();
-		}
-
-		return isFinished;
+		return visibility == Visibility.HIDE && currentTime - animationTime > 200L;
 	}
 
 	private float getVisibility(long currentTime)
