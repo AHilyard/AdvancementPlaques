@@ -9,13 +9,13 @@ displayName="Advancement Plaques"
 displayURL="https://anthonyhilyard.com/"
 updateJSONURL="https://mc-update-check.anthonyhilyard.com/499826"
 logoFile="icon.png"
-authors="Grend"
+authors="Grend, Mat0u5"
 description="Replaces standard advancement toasts with fancy plaques."
 
 [[dependencies.advancementplaques]]
 	modId="neoforge"
 	type="required"
-	versionRange="[21,)"
+	versionRange="[21.11.42,)"
 	ordering="NONE"
 	side="BOTH"
 

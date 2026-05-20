@@ -94,20 +94,20 @@ public class AdvancementPlaque
 				default -> 0;
 			};
 
-			// Plaque Background
+			// Draw the plaque background.
 			graphics.blit(RenderPipelines.GUI_TEXTURED, AdvancementPlaques.TEXTURE_PLAQUES,
 					-1, -1, 0, height() * frameOffset, width(), height(),
 					width(), height(), 256, 256, plaqueColor);
 
 			if (alpha > 0.1f)
 			{
-				// Line 1
+				// First line.
 				var typeText = displayInfo.getType().getDisplayName();
 				int typeWidth = mc.font.width(typeText);
 				graphics.drawString(mc.font, typeText.getVisualOrderText(),
 						(int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false);
 
-				// Line 2
+				// Second line.
 				var titleText = displayInfo.getTitle();
 				int titleWidth = mc.font.width(titleText);
 
@@ -126,7 +126,7 @@ public class AdvancementPlaque
 				}
 			}
 
-			// Icon
+			// Draw the icon.
 			graphics.pose().pushMatrix();
 			graphics.pose().translate(1.0f, 1.0f);
 			graphics.pose().scale(1.5f, 1.5f);
@@ -138,7 +138,7 @@ public class AdvancementPlaque
 			handleScreenshots(displayTime, fadeInTime, fadeOutTime, alpha, displayInfo);
 		}
 
-		// Effects
+		// Draw the effects.
 		if (displayTime < fadeInTime + fadeOutTime)
 		{
 			float effectAlpha = (displayTime < fadeInTime) ? (float) displayTime / fadeInTime : 1.0f - ((float) (displayTime - fadeInTime) / fadeOutTime);
@@ -226,7 +226,7 @@ public class AdvancementPlaque
 			visibility = newVisibility;
 		}
 
-		//Close item renderer
+		// Close the item renderer.
 		boolean isFinished = visibility == Visibility.HIDE && currentTime - animationTime > 200L;
 		if (isFinished)
 		{

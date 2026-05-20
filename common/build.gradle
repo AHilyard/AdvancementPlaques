@@ -25,7 +25,7 @@ dependencies {
 
 	modImplementation fileTree(dir: "../libs", include: ["*.jar"])
 
-	//ToastManager & ToastControl are not available for 1.21.11
+	// ToastManager and ToastControl are not available for 1.21.11.
 	//modImplementation "curse.maven:toastcontrol-271740:4711316"
 	//modImplementation files("../libs/ToastManager-1.21-1.1.0.jar")
 	modCompileOnly "curse.maven:jade-324717:7886760"

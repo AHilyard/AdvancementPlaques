@@ -6,6 +6,7 @@
 	"name": "Advancement Plaques",
 	"description": "Replaces standard advancement toasts with fancy plaques.",
 	"authors": [ "Grend" ],
+	"contributors": [ "Mat0u5" ],
 	"contact": {
 		"homepage": "https://anthonyhilyard.com/",
 		"sources": "https://github.com/AHilyard/AdvancementPlaques",
