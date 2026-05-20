@@ -83,12 +83,14 @@ public class AdvancementPlaque
 			if (displayTime > duration)
 			{
 				alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float) displayTime - duration) / 1000.0f));
-				if (Services.getPlatformHelper().isModLoaded("canvas")) alpha = 0;
+				if (Services.getPlatformHelper().isModLoaded("canvas"))​
+				{​
+					alpha = 0;​
+				}
 			}
 
 			int titleColor = config.getTitleColor(alpha).getValue();
 			int nameColor = config.getNameColor(alpha).getValue();
-			int plaqueColor = ARGB.white(alpha);
 
 			int frameOffset = switch (displayInfo.getType())
 			{
@@ -100,7 +102,7 @@ public class AdvancementPlaque
 			// Draw the plaque background.
 			graphics.blit(RenderPipelines.GUI_TEXTURED, AdvancementPlaques.TEXTURE_PLAQUES,
 					-1, -1, 0, height() * frameOffset, width(), height(),
-					width(), height(), 256, 256, plaqueColor);
+					width(), height(), 256, 256, ARGB.white(alpha));
 
 			if (alpha > 0.1f)
 			{
@@ -206,8 +208,14 @@ public class AdvancementPlaque
 	public boolean render(int screenWidth, int index, GuiGraphics graphics)
 	{
 		long currentTime = Util.getMillis();
-		if (animationTime == -1L) animationTime = currentTime;
-		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L) visibleTime = currentTime;
+		if (animationTime == -1L)​
+		{​
+			animationTime = currentTime;​
+		}
+		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L)​
+		{​
+			visibleTime = currentTime;​
+		}
 
 		Matrix3x2fStack poseStack = graphics.pose();
 		poseStack.pushMatrix();
