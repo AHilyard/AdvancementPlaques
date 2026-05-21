@@ -83,9 +83,9 @@ public class AdvancementPlaque
 			if (displayTime > duration)
 			{
 				alpha = Math.max(0.0f, Math.min(1.0f, 1.0f - ((float) displayTime - duration) / 1000.0f));
-				if (Services.getPlatformHelper().isModLoaded("canvas"))​
-				{​
-					alpha = 0;​
+				if (Services.getPlatformHelper().isModLoaded("canvas"))
+				{
+					alpha = 0;
 				}
 			}
 
@@ -208,13 +208,13 @@ public class AdvancementPlaque
 	public boolean render(int screenWidth, int index, GuiGraphics graphics)
 	{
 		long currentTime = Util.getMillis();
-		if (animationTime == -1L)​
-		{​
-			animationTime = currentTime;​
+		if (animationTime == -1L)
+		{
+			animationTime = currentTime;
 		}
-		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L)​
-		{​
-			visibleTime = currentTime;​
+		if (visibility == Visibility.SHOW && currentTime - animationTime <= 200L)
+		{
+			visibleTime = currentTime;
 		}
 
 		Matrix3x2fStack poseStack = graphics.pose();
