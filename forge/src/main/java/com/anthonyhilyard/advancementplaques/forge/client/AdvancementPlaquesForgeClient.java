@@ -6,8 +6,8 @@ import com.anthonyhilyard.advancementplaques.client.AdvancementPlaquesClient;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.Priority;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -24,7 +24,7 @@ public class AdvancementPlaquesForgeClient
 		MinecraftForge.EVENT_BUS.register(AdvancementPlaquesForgeClient.class);
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@SubscribeEvent(priority = Priority.LOWEST)
 	public static void onClientSetup(FMLClientSetupEvent event)
 	{
 		event.enqueueWork(new Runnable()

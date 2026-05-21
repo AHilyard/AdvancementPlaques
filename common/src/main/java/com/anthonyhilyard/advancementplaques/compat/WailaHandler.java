@@ -1,6 +1,6 @@
 package com.anthonyhilyard.advancementplaques.compat;
 
-import mcp.mobius.waila.Waila;
+import mcp.mobius.waila.WailaClient;
 
 public class WailaHandler
 {
@@ -9,11 +9,11 @@ public class WailaHandler
 
 	public static void disableWaila()
 	{
-		boolean currentState = Waila.CONFIG.get().getGeneral().isDisplayTooltip();
+		boolean currentState = WailaClient.CONFIG.get().getGeneral().isDisplayTooltip();
 		if (!disabled || currentState)
 		{
 			previousState = currentState;
-			Waila.CONFIG.get().getGeneral().setDisplayTooltip(false);
+			WailaClient.CONFIG.get().getGeneral().setDisplayTooltip(false);
 			disabled = true;
 		}
 	}
@@ -22,9 +22,8 @@ public class WailaHandler
 	{
 		if (disabled)
 		{
-			Waila.CONFIG.get().getGeneral().setDisplayTooltip(previousState);
+			WailaClient.CONFIG.get().getGeneral().setDisplayTooltip(previousState);
 			disabled = false;
 		}
 	}
-	
 }
