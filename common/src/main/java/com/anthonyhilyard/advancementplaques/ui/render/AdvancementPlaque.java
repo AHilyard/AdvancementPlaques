@@ -8,8 +8,8 @@ import com.anthonyhilyard.iceberg.services.Services;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast.Visibility;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
@@ -45,7 +45,7 @@ public class AdvancementPlaque
 	public int width() { return 256; }
 	public int height() { return 32; }
 
-	private Visibility drawPlaque(GuiGraphics graphics, long displayTime)
+	private Visibility drawPlaque(GuiGraphicsExtractor graphics, long displayTime)
 	{
 		if (mc.screen instanceof PauseScreen || mc.screen instanceof LevelLoadingScreen)
 		{
@@ -109,7 +109,7 @@ public class AdvancementPlaque
 				// First line.
 				var typeText = displayInfo.getType().getDisplayName();
 				int typeWidth = mc.font.width(typeText);
-				graphics.drawString(mc.font, typeText.getVisualOrderText(),
+				graphics.text(mc.font, typeText.getVisualOrderText(),
 						(int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false);
 
 				// Second line.
@@ -120,13 +120,13 @@ public class AdvancementPlaque
 				{
 					graphics.pose().pushMatrix();
 					graphics.pose().scale(1.5f, 1.5f);
-					graphics.drawString(mc.font, titleText.getVisualOrderText(),
+					graphics.text(mc.font, titleText.getVisualOrderText(),
 							(int)(((width() / 1.5f) - titleWidth) / 2.0f + (15.0f / 1.5f)), 9, nameColor, false);
 					graphics.pose().popMatrix();
 				}
 				else
 				{
-					graphics.drawString(mc.font, titleText.getVisualOrderText(),
+					graphics.text(mc.font, titleText.getVisualOrderText(),
 							(int)((width() - titleWidth) / 2.0f + 15.0f), 15, nameColor, false);
 				}
 			}
@@ -135,7 +135,7 @@ public class AdvancementPlaque
 			graphics.pose().pushMatrix();
 			graphics.pose().translate(1.0f, 1.0f);
 			graphics.pose().scale(1.5f, 1.5f);
-			itemRenderer.renderItemModelIntoGUIWithAlpha(graphics, displayInfo.getIcon(), 1, 1, alpha);
+			itemRenderer.renderItemModelIntoGUIWithAlpha(graphics, displayInfo.getIcon().create(), 1, 1, alpha);
 
 			graphics.pose().popMatrix();
 
@@ -205,7 +205,7 @@ public class AdvancementPlaque
 		}
 	}
 
-	public boolean render(int screenWidth, int index, GuiGraphics graphics)
+	public boolean render(int screenWidth, int index, GuiGraphicsExtractor graphics)
 	{
 		long currentTime = Util.getMillis();
 		if (animationTime == -1L)

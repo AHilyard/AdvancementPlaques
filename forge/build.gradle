@@ -51,11 +51,5 @@ shadowJar {
 	configurations = [project.configurations.shadowBundle]
 	archiveClassifier = null
 
-	manifest {
-		attributes(
-				'MixinConfigs': 'advancementplaques.mixins.json,advancementplaques.forge.mixins.json'
-		)
-	}
-
 	destinationDirectory = file("$buildDir/../../output")
 }
