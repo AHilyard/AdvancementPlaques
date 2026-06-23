@@ -11,7 +11,7 @@ import com.anthonyhilyard.iceberg.services.Services;
 import com.google.common.collect.Queues;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
@@ -70,7 +70,7 @@ public class ToastManagerWrapper extends ToastManager
 
 
 	@Override
-	public void render(GuiGraphics graphics)
+	public void extractRenderState(GuiGraphicsExtractor graphics)
 	{
 		if (!mc.options.hideGui)
 		{
@@ -78,7 +78,7 @@ public class ToastManagerWrapper extends ToastManager
 			{
 				// Do toasts.
 				wrapLock.lock();
-				wrapped.render(graphics);
+				wrapped.extractRenderState(graphics);
 				wrapLock.unlock();
 
 				// If Waila/Hwyla/Jade is installed, turn it off while the plaque is drawing if configured to do so.

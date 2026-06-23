@@ -1,10 +1,5 @@
 plugins {
-	id 'io.github.goooler.shadow'
-}
-
-loom {
-	forge {
-	}
+	id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -32,7 +27,7 @@ configurations {
 dependencies {
 	forge "net.minecraftforge:forge:$rootProject.forgeVersion"
 
-	common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+	common(project(path: ":common")) { transitive false }
 	shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 }
 
@@ -44,11 +39,17 @@ processResources {
 	}
 }
 
-shadowJar {
-	configurations = [project.configurations.shadowBundle]
+jar {
+	archiveClassifier = 'raw'
 }
 
-remapJar {
-	input.set shadowJar.archiveFile
-	atAccessWideners.add('advancementplaques.accesswidener')
+shadowJar {
+	dependsOn(jar)
+	mainSpec.sourcePaths.clear()
+	from(zipTree(jar.archiveFile))
+
+	configurations = [project.configurations.shadowBundle]
+	archiveClassifier = null
+
+	destinationDirectory = file("$buildDir/../../output")
 }

@@ -20,13 +20,10 @@ dependencies {
 	// We depend on Fabric Loader here to use the Fabric @Environment annotations,
 	// which get remapped to the correct annotations on each platform.
 	// Do NOT use other classes from Fabric Loader.
-	modImplementation "net.fabricmc:fabric-loader:$rootProject.fabricLoaderVersion"
+	implementation "net.fabricmc:fabric-loader:$rootProject.fabricLoaderVersion"
 
-	modImplementation fileTree(dir: "../libs", include: ["*.jar"])
+	implementation fileTree(dir: "../libs", include: ["*.jar"])
 
-	// ToastManager and ToastControl are not available for 1.21.11.
-	//modImplementation "curse.maven:toastcontrol-271740:4711316"
-	//modImplementation files("../libs/ToastManager-1.21-1.1.0.jar")
-	modCompileOnly "curse.maven:jade-324717:7886760"
-	modCompileOnly "curse.maven:wthit-440979:7804420"
+	compileOnly "curse.maven:jade-324717:8284939"
+	compileOnly "curse.maven:wthit-440979:7880671"
 }

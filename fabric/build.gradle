@@ -1,5 +1,5 @@
 plugins {
-	id 'io.github.goooler.shadow'
+	id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -25,10 +25,10 @@ configurations {
 }
 
 dependencies {
-	modImplementation "net.fabricmc:fabric-loader:$rootProject.fabricLoaderVersion"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabricVersion"
+	implementation "net.fabricmc:fabric-loader:$rootProject.fabricLoaderVersion"
+	implementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabricVersion"
 
-	common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+	common(project(path: ":common")) { transitive false }
 	shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 }
 
@@ -40,11 +40,21 @@ processResources {
 	}
 }
 
-shadowJar {
-	configurations = [project.configurations.shadowBundle]
-	archiveClassifier = 'dev-shadow'
+jar {
+	archiveClassifier = 'raw'
 }
 
-remapJar {
-	input.set shadowJar.archiveFile
+shadowJar {
+	dependsOn(jar)
+	mainSpec.sourcePaths.clear()
+	from(zipTree(jar.archiveFile))
+
+	configurations = [project.configurations.shadowBundle]
+	archiveClassifier = null
+
+	minimize {
+		exclude(project(':common'))
+	}
+
+	destinationDirectory = file("$buildDir/../../output")
 }
