@@ -72,7 +72,7 @@ public class ToastManagerWrapper extends ToastManager
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics)
 	{
-		if (!mc.options.hideGui)
+		if (!mc.gui.hud.isHidden())
 		{
 			try
 			{
