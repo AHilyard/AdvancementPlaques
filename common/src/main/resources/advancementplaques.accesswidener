@@ -1,4 +1,4 @@
 accessWidener	v2 official
 accessible    field    net/minecraft/client/gui/components/toasts/AdvancementToast    advancement    Lnet/minecraft/advancements/AdvancementHolder;
-accessible    field    net/minecraft/client/Minecraft    toastManager    Lnet/minecraft/client/gui/components/toasts/ToastManager;
-mutable       field    net/minecraft/client/Minecraft    toastManager    Lnet/minecraft/client/gui/components/toasts/ToastManager;
+accessible    field    net/minecraft/client/gui/Gui    toastManager    Lnet/minecraft/client/gui/components/toasts/ToastManager;
+mutable       field    net/minecraft/client/gui/Gui    toastManager    Lnet/minecraft/client/gui/components/toasts/ToastManager;

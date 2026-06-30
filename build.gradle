@@ -33,7 +33,7 @@ subprojects {
 	dependencies {
 		minecraft "net.minecraft:minecraft:$rootProject.minecraftVersion"
 
-		compileOnly "curse.maven:advancementscreenshot-414086:7902428"
+		compileOnly "curse.maven:advancementscreenshot-414086:8275006"
 	}
 
 	java {

@@ -13,10 +13,10 @@ public class AdvancementPlaquesClient
 	{
 		try
 		{
-			if (minecraft.toastManager != null)
+			if (minecraft.gui.toastManager != null)
 			{
 				AdvancementPlaques.LOGGER.debug("Installing Advancement Plaques toast component.");
-				minecraft.toastManager = new ToastManagerWrapper(minecraft, minecraft.toastManager);
+				minecraft.gui.toastManager = new ToastManagerWrapper(minecraft, minecraft.gui.toastManager);
 			}
 			else
 			{

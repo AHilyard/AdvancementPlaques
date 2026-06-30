@@ -24,6 +24,7 @@ dependencies {
 
 	implementation fileTree(dir: "../libs", include: ["*.jar"])
 
-	compileOnly "curse.maven:jade-324717:8284939"
+	compileOnly "curse.maven:jade-324717:8285136"
+	// 26.2 version of WTHIT is not yet available.
 	compileOnly "curse.maven:wthit-440979:7880671"
 }

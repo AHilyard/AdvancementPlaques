@@ -15,28 +15,28 @@ description="Replaces standard advancement toasts with fancy plaques."
 [[dependencies.advancementplaques]]
 	modId="forge"
 	mandatory=true
-	versionRange="[64,)"
+	versionRange="[65,)"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="minecraft"
 	mandatory=true
-	versionRange="[26.1,)"
+	versionRange="[26.2,)"
 	ordering="NONE"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="iceberg"
 	mandatory=true
-	versionRange="[1.4.1,)"
+	versionRange="[1.4.2,)"
 	ordering="AFTER"
 	side="BOTH"
 
 [[dependencies.advancementplaques]]
 	modId="prism"
 	mandatory=false
-	versionRange="[1.1.1,)"
+	versionRange="[1.1.2,)"
 	ordering="AFTER"
 	side="BOTH"
 

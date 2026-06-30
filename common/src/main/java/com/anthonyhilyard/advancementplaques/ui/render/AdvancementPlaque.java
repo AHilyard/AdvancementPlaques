@@ -47,7 +47,7 @@ public class AdvancementPlaque
 
 	private Visibility drawPlaque(GuiGraphicsExtractor graphics, long displayTime)
 	{
-		if (mc.screen instanceof PauseScreen || mc.screen instanceof LevelLoadingScreen)
+		if (mc.gui.screen() instanceof PauseScreen || mc.gui.screen() instanceof LevelLoadingScreen)
 		{
 			return Visibility.SHOW;
 		}
