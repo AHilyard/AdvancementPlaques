@@ -33,6 +33,7 @@ subprojects {
 	dependencies {
 		minecraft "net.minecraft:minecraft:$rootProject.minecraftVersion"
 
+		// Advancement Screenshot has not been updated to 26.3 yet, check compatibility later.
 		compileOnly "curse.maven:advancementscreenshot-414086:8275006"
 	}
 
