@@ -58,7 +58,7 @@ public class AdvancementPlaque
 		float fadeInTime, fadeOutTime, duration;
 		var config = AdvancementPlaquesConfig.getInstance();
 
-		switch (displayInfo.getType())
+		switch (displayInfo.type())
 		{
 			case GOAL -> {
 				fadeInTime = (float) (config.goalEffectFadeInTime.get() * 1000.0);
@@ -92,7 +92,7 @@ public class AdvancementPlaque
 			int titleColor = config.getTitleColor(alpha).getValue();
 			int nameColor = config.getNameColor(alpha).getValue();
 
-			int frameOffset = switch (displayInfo.getType())
+			int frameOffset = switch (displayInfo.type())
 			{
 				case GOAL -> 1;
 				case CHALLENGE -> 2;
@@ -107,13 +107,13 @@ public class AdvancementPlaque
 			if (alpha > 0.1f)
 			{
 				// First line.
-				var typeText = displayInfo.getType().getDisplayName();
+				var typeText = displayInfo.type().getDisplayName();
 				int typeWidth = mc.font.width(typeText);
 				graphics.text(mc.font, typeText.getVisualOrderText(),
 						(int)((width() - typeWidth) / 2.0f + 15.0f), 5, titleColor, false);
 
 				// Second line.
-				var titleText = displayInfo.getTitle();
+				var titleText = displayInfo.title();
 				int titleWidth = mc.font.width(titleText);
 
 				if (titleWidth <= (220 / 1.5f))
@@ -135,7 +135,7 @@ public class AdvancementPlaque
 			graphics.pose().pushMatrix();
 			graphics.pose().translate(1.0f, 1.0f);
 			graphics.pose().scale(1.5f, 1.5f);
-			itemRenderer.renderItemModelIntoGUIWithAlpha(graphics, displayInfo.getIcon().create(), 1, 1, alpha);
+			itemRenderer.renderItemModelIntoGUIWithAlpha(graphics, displayInfo.icon().create(), 1, 1, alpha);
 
 			graphics.pose().popMatrix();
 
@@ -150,7 +150,7 @@ public class AdvancementPlaque
 			int effectColor = ARGB.white(effectAlpha);
 
 			graphics.pose().pushMatrix();
-			if (displayInfo.getType() == AdvancementType.CHALLENGE)
+			if (displayInfo.type() == AdvancementType.CHALLENGE)
 			{
 				graphics.blit(RenderPipelines.GUI_TEXTURED, AdvancementPlaques.TEXTURE_PLAQUE_EFFECTS,
 						-16, -16, 0, height() + 32, width() + 32, height() + 32,
@@ -177,7 +177,7 @@ public class AdvancementPlaque
 			var config = AdvancementPlaquesConfig.getInstance();
 			try
 			{
-				switch (displayInfo.getType())
+				switch (displayInfo.type())
 				{
 					case TASK -> {
 						if (config.taskVolume.get() > 0.0)
@@ -200,7 +200,7 @@ public class AdvancementPlaque
 	{
 		if (displayTime >= fadeIn + fadeOut && alpha > 0.9f && !hasTakenScreenshot && Services.getPlatformHelper().isModLoaded("advancementscreenshot"))
 		{
-			ModServices.getAdvancementScreenshotHandler().takeScreenshot(displayInfo.getTitle());
+			ModServices.getAdvancementScreenshotHandler().takeScreenshot(displayInfo.title());
 			hasTakenScreenshot = true;
 		}
 	}

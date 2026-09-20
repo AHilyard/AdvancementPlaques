@@ -148,9 +148,9 @@ public final class AdvancementPlaquesConfig extends IcebergConfig<AdvancementPla
 		}
 
 		// Now check if the advancement type is filtered out.
-		boolean advancementFiltered = !((displayInfo.getType() == AdvancementType.TASK && AdvancementPlaquesConfig.getInstance().tasks.get()) ||
-										(displayInfo.getType() == AdvancementType.GOAL && AdvancementPlaquesConfig.getInstance().goals.get()) ||
-										(displayInfo.getType() == AdvancementType.CHALLENGE && AdvancementPlaquesConfig.getInstance().challenges.get()));
+		boolean advancementFiltered = !((displayInfo.type() == AdvancementType.TASK && AdvancementPlaquesConfig.getInstance().tasks.get()) ||
+										(displayInfo.type() == AdvancementType.GOAL && AdvancementPlaquesConfig.getInstance().goals.get()) ||
+										(displayInfo.type() == AdvancementType.CHALLENGE && AdvancementPlaquesConfig.getInstance().challenges.get()));
 		if (advancementFiltered)
 		{
 			// Check the whitelist to see if the advancement should be shown anyways.
