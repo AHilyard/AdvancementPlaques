@@ -26,6 +26,5 @@ dependencies {
 
 	compileOnly "curse.maven:jade-324717:8892530"
 	// WTHIT has not been updated to 26.3 yet, check compatibility later.
-	// 26.2 version of WTHIT is not yet available.
 	compileOnly "curse.maven:wthit-440979:8512440"
 }
